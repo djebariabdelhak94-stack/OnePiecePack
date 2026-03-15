@@ -412,8 +412,10 @@ window.imgFail=function(el){
 
 function mkImg(card,style){
   var u=imgUrl(card.id);
-  return '<img src="'+u+'" style="'+style+'" onerror="window.imgFail&&window.imgFail(this)">'
-    +'<div class="svg-fb" style="display:none;'+style+'">'+makeSVG(card)+'</div>';
+  return '<div style="position:relative;width:100%;height:100%;overflow:hidden">'
+    +'<img src="'+u+'" style="'+style+'" onerror="window.imgFail&&window.imgFail(this)">'
+    +'<div class="svg-fb" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%">'+makeSVG(card)+'</div>'
+    +'</div>';
 }
 
 function packSVG(s){
@@ -563,7 +565,11 @@ function openAgain(){closeRev();setTimeout(function(){doOpen(S.last);},150);}
 
 function openCzoom(card){
   if(!card)return;
-  document.getElementById('cz-img').innerHTML=mkImg(card,'width:100%;border-radius:16px;display:block');
+  var imgHtml='<div style="position:relative;width:100%;overflow:hidden;border-radius:16px">'
+    +'<img src="'+imgUrl(card.id)+'" style="width:100%;border-radius:16px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+    +'<div class="svg-fb" style="display:none;width:100%">'+makeSVG(card)+'</div>'
+    +'</div>';
+  document.getElementById('cz-img').innerHTML=imgHtml;
   document.getElementById('cz-id').textContent=card.id;
   document.getElementById('cz-name').textContent=card.name;
   document.getElementById('cz-sub').textContent=(RL[card.rarity]||card.rarity)+' - '+card.set+(card.color?' - '+card.color:'');
@@ -621,7 +627,10 @@ function renderPrices(){
   if(pc)pc.textContent=cards.length+' cartes';
   var html='';
   shown.forEach(function(card){
-    var thumb=mkImg(card,'width:100%;height:100%;object-fit:cover;border-radius:4px;display:block');
+    var thumb='<div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:4px">'
+      +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+      +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
+      +'</div>';
     html+='<div class="pitem" onclick="openCzoom(getCard(\''+card.id+'\'))"><div class="pthmb">'+thumb+'</div>'
       +'<div class="pinf"><div class="pname">'+card.name+'</div>'
       +'<div class="parc">'+card.id+'</div>'
@@ -652,7 +661,10 @@ function renderCol(){
   var html='';
   filtered.forEach(function(e){
     var card=getCard(e.id);
-    var img=mkImg(card,'width:100%;height:100%;object-fit:cover;display:block');
+    var img='<div style="position:relative;width:100%;height:100%;overflow:hidden">'
+      +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+      +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
+      +'</div>';
     html+='<div class="ccard" onclick="openCzoom(getCard(\''+card.id+'\'))"><div class="ccimg">'+img+'</div>'
       +'<div class="ccft"><div class="ccn">'+card.name+'</div>'
       +'<div class="ccr"><div class="ccp">'+card.price.toFixed(2)+' EUR</div><div class="ccq">x'+e.qty+'</div></div></div></div>';
