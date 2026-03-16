@@ -72,12 +72,12 @@
     .abtn{display:block;text-align:center;text-decoration:none;padding:11px 8px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer}
     .abtn.cm{background:#27ae60;color:white}
     .abtn.tcp{background:#e74c3c;color:white}
-    .roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow-y:auto}
-    .roverlay.active{display:flex}
+    .roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow:hidden;}
+    .roverlay.active{display:flex;}
     .rtop{padding:14px 18px 10px;text-align:center;flex-shrink:0;border-bottom:1px solid var(--border)}
     .rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
     .rts{font-size:11px;color:var(--dim)}
-    .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1}
+    .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1;overflow-y:auto;padding-bottom:140px;}
     .fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer}
     .finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
     .finn.flipped{transform:rotateY(180deg)}
@@ -93,7 +93,7 @@
     .flname{font-weight:500;color:var(--text);font-size:9px}
     .flr{font-size:8px}
     .flr.SEC{color:var(--gold)} .flr.SR{color:var(--red)} .flr.R{color:var(--blue)} .flr.UC,.flr.C,.flr.L{color:var(--muted)}
-    .ract{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom,10px));flex-shrink:0;border-top:1px solid var(--border)}
+    .ract{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;padding-bottom:max(14px,env(safe-area-inset-bottom,14px));flex-shrink:0;border-top:1px solid var(--border);background:#000;position:sticky;bottom:0;z-index:5;}
     .radd{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:12px;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer;grid-column:1/-1}
     .rclose{background:var(--s2);color:var(--dim);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:12px;cursor:pointer}
     .ragain{background:var(--s2);color:var(--gold);border:1px solid rgba(212,168,67,.3);padding:10px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
@@ -454,12 +454,11 @@
     }
 
     function linkCM(card){
-      const n = String(card.name||"").replace(/\./g,"").replace(/\s+/g,"").replace(/[^a-zA-Z0-9]/g,"");
-      return "https://www.cardmarket.com/en/OnePiece/Cards/" + n + "-" + card.id + "/Versions";
+  return 'https://www.cardmarket.com/en/OnePiece/Products/Search?searchString=' + encodeURIComponent(card.id + ' ' + card.name);
     }
 
     function linkTCP(card){
-      return "https://www.tcgplayer.com/search/one-piece-card-game/product?q=" + encodeURIComponent(card.id);
+  return 'https://www.tcgplayer.com/search/one-piece-card-game/product?productLineName=one-piece-card-game&q=' + encodeURIComponent(card.name + ' ' + card.id) + '&view=grid';
     }
 
     function imgUrl(id){
