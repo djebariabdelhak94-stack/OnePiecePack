@@ -1,730 +1,997 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>OnePiecePack</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#07070f;--s1:#0f0f1e;--s2:#171728;--s3:#1f1f34;--gold:#d4a843;--gold2:#f0c860;--text:#e8e0d0;--muted:#5a5470;--dim:#8a84a0;--red:#e74c3c;--blue:#2980b9;--green:#2ecc71;--border:rgba(212,168,67,0.15)}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow-x:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-weight:300}
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(10,10,20,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding-bottom:max(8px,env(safe-area-inset-bottom,0px))}
-.bi{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 0;border:none;background:none;color:var(--muted)}
-.bi.active{color:var(--gold)}
-.bi-ico{font-size:22px;line-height:1}
-.bi-lbl{font-size:10px;letter-spacing:0.04em}
-.page{display:none;min-height:100vh;padding-bottom:85px}
-.page.active{display:block}
-.topbar{position:sticky;top:0;z-index:100;background:rgba(7,7,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
-.tlogo{font-family:'Cinzel',serif;font-size:16px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.tstat{font-size:12px;color:var(--gold);background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);padding:4px 10px;border-radius:20px}
-.hero{padding:28px 18px 20px;text-align:center}
-.hbadge{display:inline-block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(212,168,67,0.35);padding:5px 14px;border-radius:20px;background:rgba(212,168,67,0.07);margin-bottom:18px}
-.htitle{font-family:'Cinzel',serif;font-size:clamp(36px,9vw,60px);font-weight:900;line-height:0.95;margin-bottom:12px;background:linear-gradient(135deg,var(--gold) 0%,#fff8c0 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hsub{font-size:14px;color:var(--dim);max-width:320px;margin:0 auto 24px;line-height:1.6}
-.hbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:14px 20px;border-radius:12px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer}
-.btn-o{background:var(--s1);color:var(--text);border:1px solid var(--border);padding:14px 20px;border-radius:12px;font-size:13px;cursor:pointer}
-.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.hst{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
-.hstv{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);font-weight:700}
-.hstl{font-size:9px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fc{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 14px;cursor:pointer}
-.fci{font-size:24px;margin-bottom:8px}
-.fct{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px}
-.fcd{font-size:11px;color:var(--dim);line-height:1.5}
-.stitle{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);padding:16px 18px 6px}
-.sscroll{overflow-x:auto;padding:0 18px 16px;display:flex;gap:10px;scrollbar-width:none}
-.sscroll::-webkit-scrollbar{display:none}
-.schip{flex-shrink:0;background:var(--s1);border:2px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;cursor:pointer;min-width:100px}
-.schip.active{border-color:var(--gold);background:var(--s2)}
-.scnum{font-size:9px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase}
-.scname{font-size:11px;font-weight:500;margin-top:3px;line-height:1.3}
-.scbadge{font-size:9px;color:var(--muted);margin-top:2px}
-.scnew{display:inline-block;font-size:8px;background:var(--red);color:white;padding:1px 5px;border-radius:3px;margin-top:3px}
-.packarea{margin:0 18px 16px;background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:20px 18px;text-align:center}
-.packwrap{width:120px;height:180px;margin:0 auto 16px;cursor:pointer;filter:drop-shadow(0 8px 24px rgba(212,168,67,0.3))}
-.pnl{font-size:10px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
-.pnn{font-family:'Cinzel',serif;font-size:16px;font-weight:700;margin-bottom:4px}
-.pnm{font-size:11px;color:var(--dim);margin-bottom:16px}
-.obtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.obmain{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:13px;border-radius:10px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer;grid-column:1/-1}
-.obsec{background:var(--s2);color:var(--gold);border:1px solid var(--border);padding:11px;border-radius:10px;font-size:13px;cursor:pointer}
-.pbox{margin:0 18px 16px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px}
-.pboxt{font-size:11px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-.prow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.plbl{font-size:11px;width:95px;flex-shrink:0}
-.pbg{flex:1;height:5px;background:var(--s3);border-radius:3px}
-.pbf{height:100%;border-radius:3px}
-.ppct{font-size:11px;color:var(--dim);width:38px;text-align:right}
-.gnote{margin-top:10px;padding:10px 12px;background:rgba(212,168,67,0.07);border:1px solid rgba(212,168,67,0.2);border-radius:8px;font-size:12px;color:var(--dim)}
-.affbox{margin:0 18px 16px;background:linear-gradient(135deg,rgba(26,74,138,0.2),rgba(139,0,255,0.12));border:1px solid rgba(41,128,185,0.3);border-radius:14px;padding:14px}
-.afft{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:3px}
-.affs{font-size:11px;color:var(--dim);margin-bottom:10px}
-.affbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.abtn{display:block;text-align:center;text-decoration:none;padding:11px 8px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer}
-.abtn.cm{background:#27ae60;color:white}
-.abtn.tcp{background:#e74c3c;color:white}
-.roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow-y:auto}
-.roverlay.active{display:flex}
-.rtop{padding:14px 18px 10px;text-align:center;flex-shrink:0;border-bottom:1px solid var(--border)}
-.rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
-.rts{font-size:11px;color:var(--dim)}
-.fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1}
-.fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer}
-.finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)}
-.finn.flipped{transform:rotateY(180deg)}
-.ffront,.fback{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;overflow:hidden}
-.fback{background:linear-gradient(135deg,var(--s2),var(--s3));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center}
-.fblogo{font-family:'Cinzel',serif;font-size:9px;color:var(--gold);opacity:0.6;letter-spacing:0.1em;text-align:center;line-height:1.4}
-.ffront{transform:rotateY(180deg)}
-.ffront img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
-.gs{box-shadow:0 0 18px rgba(212,168,67,0.8),0 0 40px rgba(212,168,67,0.3)}
-.gsr{box-shadow:0 0 16px rgba(231,76,60,0.7),0 0 30px rgba(231,76,60,0.25)}
-.gr{box-shadow:0 0 10px rgba(41,128,185,0.6)}
-.flbl{text-align:center;margin-top:4px;line-height:1.3}
-.flname{font-weight:500;color:var(--text);font-size:9px}
-.flr{font-size:8px}
-.flr.SEC{color:var(--gold)}.flr.SR{color:var(--red)}.flr.R{color:var(--blue)}.flr.UC,.flr.C{color:var(--muted)}
-.ract{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom,10px));flex-shrink:0;border-top:1px solid var(--border)}
-.radd{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:12px;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer;grid-column:1/-1}
-.rclose{background:var(--s2);color:var(--dim);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:12px;cursor:pointer}
-.ragain{background:var(--s2);color:var(--gold);border:1px solid rgba(212,168,67,0.3);padding:10px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
-.czoom{position:fixed;inset:0;z-index:3500;background:rgba(0,0,0,0.96);display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:16px 20px 30px}
-.czoom.open{display:flex}
-.czoom-head{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;max-width:360px}
-.czoom-back{background:none;border:1px solid var(--border);color:var(--dim);padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer}
-.czoom-close{background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.czoom-img{width:min(260px,70vw);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.8);margin-bottom:16px}
-.czoom-img img{width:100%;border-radius:16px;display:block}
-.czoom-info{text-align:center;max-width:340px;width:100%}
-.czoom-id{font-family:monospace;font-size:12px;color:var(--muted);margin-bottom:4px}
-.czoom-name{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);margin-bottom:3px}
-.czoom-sub{font-size:11px;color:var(--dim);margin-bottom:10px}
-.czoom-price{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);font-weight:700;margin-bottom:14px}
-.czoom-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:320px;margin:0 auto}
-.czoom-btn{display:block;text-align:center;text-decoration:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;border:none;cursor:pointer}
-.czoom-btn.cm{background:#27ae60;color:white}
-.czoom-btn.tcp{background:#e74c3c;color:white}
-@keyframes godRay{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.grays{position:fixed;inset:0;pointer-events:none;z-index:1999;background:repeating-conic-gradient(rgba(212,168,67,0.12) 0deg,transparent 12deg,rgba(212,168,67,0.12) 24deg);animation:godRay 10s linear infinite;display:none}
-.grays.show{display:block}
-.sbar{margin:0 18px 12px;position:relative}
-.sinp{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 42px 12px 16px;color:var(--text);font-size:14px;outline:none}
-.sinp:focus{border-color:var(--gold)}
-.sinp::placeholder{color:var(--muted)}
-.sico{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
-.plist{padding:0 18px}
-.pitem{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px;cursor:pointer}
-.pitem:active{background:var(--s2)}
-.pthmb{width:42px;height:58px;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--s2)}
-.pthmb img{width:100%;height:100%;object-fit:cover;display:block}
-.pinf{flex:1;min-width:0}
-.pname{font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.parc{font-size:10px;color:var(--dim);margin-top:1px;font-family:monospace}
-.pbdg{display:flex;gap:4px;margin-top:4px}
-.rbdg{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px}
-.rbs{background:rgba(212,168,67,0.15);color:var(--gold);border:1px solid rgba(212,168,67,0.35)}
-.rbsr{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.35)}
-.rbr{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.35)}
-.rbc{background:rgba(90,96,112,0.2);color:var(--muted);border:1px solid var(--border)}
-.prgt{text-align:right;flex-shrink:0}
-.pval{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);font-weight:700}
-.blinks{display:flex;gap:4px;margin-top:4px;justify-content:flex-end}
-.blnk{font-size:10px;padding:3px 7px;border-radius:5px;text-decoration:none;font-weight:600}
-.blnk.cm{background:#27ae60;color:white}
-.blnk.tcp{background:#e74c3c;color:white}
-.colhdr{padding:14px 18px 6px}
-.colsr{display:flex;gap:8px}
-.colst{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;flex:1}
-.colstv{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);font-weight:700}
-.colstl{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
-.fscroll{overflow-x:auto;padding:8px 18px;display:flex;gap:6px;scrollbar-width:none}
-.fscroll::-webkit-scrollbar{display:none}
-.fpill{flex-shrink:0;background:var(--s1);border:1px solid var(--border);color:var(--dim);padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap}
-.fpill.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.08)}
-.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 18px 20px}
-.ccard{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer}
-.ccard:active{transform:scale(0.97)}
-.ccimg{width:100%;aspect-ratio:63/88;overflow:hidden;background:var(--s2)}
-.ccimg img{width:100%;height:100%;object-fit:cover;display:block}
-.ccft{padding:5px 7px 7px}
-.ccn{font-size:9px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
-.ccr{display:flex;align-items:center;justify-content:space-between}
-.ccp{font-size:10px;color:var(--gold);font-weight:600}
-.ccq{font-size:9px;color:var(--muted);background:var(--s2);padding:1px 4px;border-radius:3px}
-.colempty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
-.profcard{margin:14px 18px;background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center}
-.profav{font-size:50px;margin-bottom:10px}
-.profn{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:2px}
-.profr{font-size:12px;color:var(--dim);margin-bottom:16px}
-.profst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pst{background:var(--s2);border-radius:10px;padding:10px 6px;text-align:center}
-.pstv{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);font-weight:700}
-.pstl{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:2px}
-.achbox{margin:0 18px 14px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px}
-.acht{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);margin-bottom:12px}
-.achgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.achi{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;opacity:0.4}
-.achi.ok{opacity:1;border-color:var(--gold);background:rgba(212,168,67,0.06)}
-.achic{font-size:22px;margin-bottom:5px}
-.achn{font-size:10px;font-weight:500;color:var(--dim)}
-.achi.ok .achn{color:var(--gold)}
-.namebox{margin:0 18px 14px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px}
-.nameboxt{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:10px}
-.namerow{display:flex;gap:8px}
-.nameinp{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-size:14px;outline:none}
-.namesave{background:var(--gold);color:#06040a;border:none;border-radius:10px;padding:10px 14px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer}
-.lbitem{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:7px}
-.lbitem.gold{border-color:var(--gold)}.lbitem.me{border-color:rgba(41,128,185,0.5);background:rgba(41,128,185,0.05)}
-.lbrk{font-family:'Cinzel',serif;font-size:18px;font-weight:900;width:28px;text-align:center}
-.lbrk.r1{color:var(--gold)}.lbrk.r2{color:#c0c0c0}.lbrk.r3{color:#cd7f32}
-.lbav{font-size:26px;width:36px;text-align:center}
-.lbinf{flex:1;min-width:0}
-.lbn{font-weight:500;font-size:13px}
-.lbd{font-size:10px;color:var(--dim);margin-top:2px}
-.lbsc{text-align:right}
-.lbscv{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);font-weight:700}
-.lbscl{font-size:9px;color:var(--muted)}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--s2);border:1px solid var(--gold);color:var(--text);padding:10px 18px;border-radius:10px;font-size:13px;z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OnePiecePack</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#07070f;--s1:#0f0f1e;--s2:#171728;--s3:#1f1f34;
+      --gold:#d4a843;--gold2:#f0c860;--text:#e8e0d0;--muted:#5a5470;--dim:#8a84a0;
+      --red:#e74c3c;--blue:#2980b9;--green:#2ecc71;--border:rgba(212,168,67,.15)
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow-x:hidden}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-weight:300}
+    .bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(10,10,20,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding-bottom:max(8px,env(safe-area-inset-bottom,0px))}
+    .bi{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 0;border:none;background:none;color:var(--muted)}
+    .bi.active{color:var(--gold)}
+    .bi-ico{font-size:22px;line-height:1}
+    .bi-lbl{font-size:10px;letter-spacing:.04em}
+    .page{display:none;min-height:100vh;padding-bottom:85px}
+    .page.active{display:block}
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(7,7,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+    .tlogo{font-family:'Cinzel',serif;font-size:16px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .tstat{font-size:12px;color:var(--gold);background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.25);padding:4px 10px;border-radius:20px}
+    .hero{padding:28px 18px 20px;text-align:center}
+    .hbadge{display:inline-block;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(212,168,67,.35);padding:5px 14px;border-radius:20px;background:rgba(212,168,67,.07);margin-bottom:18px}
+    .htitle{font-family:'Cinzel',serif;font-size:clamp(36px,9vw,60px);font-weight:900;line-height:.95;margin-bottom:12px;background:linear-gradient(135deg,var(--gold) 0%,#fff8c0 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hsub{font-size:14px;color:var(--dim);max-width:320px;margin:0 auto 24px;line-height:1.6}
+    .hbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+    .btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:14px 20px;border-radius:12px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer}
+    .btn-o{background:var(--s1);color:var(--text);border:1px solid var(--border);padding:14px 20px;border-radius:12px;font-size:13px;cursor:pointer}
+    .hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+    .hst{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
+    .hstv{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);font-weight:700}
+    .hstl{font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+    .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .fc{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 14px;cursor:pointer}
+    .fci{font-size:24px;margin-bottom:8px}
+    .fct{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px}
+    .fcd{font-size:11px;color:var(--dim);line-height:1.5}
+    .stitle{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);padding:16px 18px 6px}
+    .sscroll{overflow-x:auto;padding:0 18px 16px;display:flex;gap:10px;scrollbar-width:none}
+    .sscroll::-webkit-scrollbar{display:none}
+    .schip{flex-shrink:0;background:var(--s1);border:2px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;cursor:pointer;min-width:100px}
+    .schip.active{border-color:var(--gold);background:var(--s2)}
+    .scnum{font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase}
+    .scname{font-size:11px;font-weight:500;margin-top:3px;line-height:1.3}
+    .scbadge{font-size:9px;color:var(--muted);margin-top:2px}
+    .scnew{display:inline-block;font-size:8px;background:var(--red);color:white;padding:1px 5px;border-radius:3px;margin-bottom:4px}
+    .packarea{margin:0 18px 16px;background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:20px 18px;text-align:center}
+    .packwrap{width:120px;height:180px;margin:0 auto 16px;cursor:pointer;filter:drop-shadow(0 8px 24px rgba(212,168,67,.3))}
+    .pnl{font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+    .pnn{font-family:'Cinzel',serif;font-size:16px;font-weight:700;margin-bottom:4px}
+    .pnm{font-size:11px;color:var(--dim);margin-bottom:16px}
+    .obtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .obmain{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:13px;border-radius:10px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer;grid-column:1/-1}
+    .obsec{background:var(--s2);color:var(--gold);border:1px solid var(--border);padding:11px;border-radius:10px;font-size:13px;cursor:pointer}
+    .pbox{margin:0 18px 16px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px}
+    .pboxt{font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+    .prow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .plbl{font-size:11px;width:95px;flex-shrink:0}
+    .pbg{flex:1;height:5px;background:var(--s3);border-radius:3px}
+    .pbf{height:100%;border-radius:3px}
+    .ppct{font-size:11px;color:var(--dim);width:50px;text-align:right}
+    .gnote{margin-top:10px;padding:10px 12px;background:rgba(212,168,67,.07);border:1px solid rgba(212,168,67,.2);border-radius:8px;font-size:12px;color:var(--dim)}
+    .affbox{margin:0 18px 16px;background:linear-gradient(135deg,rgba(26,74,138,.2),rgba(139,0,255,.12));border:1px solid rgba(41,128,185,.3);border-radius:14px;padding:14px}
+    .afft{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:3px}
+    .affs{font-size:11px;color:var(--dim);margin-bottom:10px}
+    .affbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .abtn{display:block;text-align:center;text-decoration:none;padding:11px 8px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer}
+    .abtn.cm{background:#27ae60;color:white}
+    .abtn.tcp{background:#e74c3c;color:white}
+    .roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow-y:auto}
+    .roverlay.active{display:flex}
+    .rtop{padding:14px 18px 10px;text-align:center;flex-shrink:0;border-bottom:1px solid var(--border)}
+    .rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
+    .rts{font-size:11px;color:var(--dim)}
+    .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1}
+    .fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer}
+    .finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+    .finn.flipped{transform:rotateY(180deg)}
+    .ffront,.fback{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;overflow:hidden}
+    .fback{background:linear-gradient(135deg,var(--s2),var(--s3));border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center}
+    .fblogo{font-family:'Cinzel',serif;font-size:9px;color:var(--gold);opacity:.6;letter-spacing:.1em;text-align:center;line-height:1.4}
+    .ffront{transform:rotateY(180deg)}
+    .ffront img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
+    .gs{box-shadow:0 0 18px rgba(212,168,67,.8),0 0 40px rgba(212,168,67,.3)}
+    .gsr{box-shadow:0 0 16px rgba(231,76,60,.7),0 0 30px rgba(231,76,60,.25)}
+    .gr{box-shadow:0 0 10px rgba(41,128,185,.6)}
+    .flbl{text-align:center;margin-top:4px;line-height:1.3}
+    .flname{font-weight:500;color:var(--text);font-size:9px}
+    .flr{font-size:8px}
+    .flr.SEC{color:var(--gold)} .flr.SR{color:var(--red)} .flr.R{color:var(--blue)} .flr.UC,.flr.C,.flr.L{color:var(--muted)}
+    .ract{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom,10px));flex-shrink:0;border-top:1px solid var(--border)}
+    .radd{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:12px;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer;grid-column:1/-1}
+    .rclose{background:var(--s2);color:var(--dim);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:12px;cursor:pointer}
+    .ragain{background:var(--s2);color:var(--gold);border:1px solid rgba(212,168,67,.3);padding:10px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
+    .czoom{position:fixed;inset:0;z-index:3500;background:rgba(0,0,0,.96);display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:16px 20px 30px}
+    .czoom.open{display:flex}
+    .czoom-head{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;max-width:360px}
+    .czoom-back{background:none;border:1px solid var(--border);color:var(--dim);padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer}
+    .czoom-close{background:rgba(255,255,255,.1);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .czoom-img{width:min(260px,70vw);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.8);margin-bottom:16px}
+    .czoom-img img{width:100%;border-radius:16px;display:block}
+    .czoom-info{text-align:center;max-width:340px;width:100%}
+    .czoom-id{font-family:monospace;font-size:12px;color:var(--muted);margin-bottom:4px}
+    .czoom-name{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);margin-bottom:3px}
+    .czoom-sub{font-size:11px;color:var(--dim);margin-bottom:10px}
+    .czoom-price{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);font-weight:700;margin-bottom:14px}
+    .czoom-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:320px;margin:0 auto}
+    .czoom-btn{display:block;text-align:center;text-decoration:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;border:none;cursor:pointer}
+    .czoom-btn.cm{background:#27ae60;color:white}
+    .czoom-btn.tcp{background:#e74c3c;color:white}
+    @keyframes godRay{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .grays{position:fixed;inset:0;pointer-events:none;z-index:1999;background:repeating-conic-gradient(rgba(212,168,67,.12) 0deg,transparent 12deg,rgba(212,168,67,.12) 24deg);animation:godRay 10s linear infinite;display:none}
+    .grays.show{display:block}
+    .sbar{margin:0 18px 12px;position:relative}
+    .sinp{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 42px 12px 16px;color:var(--text);font-size:14px;outline:none}
+    .sinp:focus{border-color:var(--gold)}
+    .sinp::placeholder{color:var(--muted)}
+    .sico{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .plist{padding:0 18px}
+    .pitem{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px;cursor:pointer}
+    .pthmb{width:42px;height:58px;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--s2)}
+    .pthmb img{width:100%;height:100%;object-fit:cover;display:block}
+    .pinf{flex:1;min-width:0}
+    .pname{font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .parc{font-size:10px;color:var(--dim);margin-top:1px;font-family:monospace}
+    .pbdg{display:flex;gap:4px;margin-top:4px}
+    .rbdg{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px}
+    .rbs{background:rgba(212,168,67,.15);color:var(--gold);border:1px solid rgba(212,168,67,.35)}
+    .rbsr{background:rgba(231,76,60,.15);color:var(--red);border:1px solid rgba(231,76,60,.35)}
+    .rbr{background:rgba(41,128,185,.15);color:var(--blue);border:1px solid rgba(41,128,185,.35)}
+    .rbc{background:rgba(90,96,112,.2);color:var(--muted);border:1px solid var(--border)}
+    .prgt{text-align:right;flex-shrink:0}
+    .pval{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);font-weight:700}
+    .blinks{display:flex;gap:4px;margin-top:4px;justify-content:flex-end}
+    .blnk{font-size:10px;padding:3px 7px;border-radius:5px;text-decoration:none;font-weight:600}
+    .blnk.cm{background:#27ae60;color:white}
+    .blnk.tcp{background:#e74c3c;color:white}
+    .colhdr{padding:14px 18px 6px}
+    .colsr{display:flex;gap:8px}
+    .colst{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;flex:1}
+    .colstv{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);font-weight:700}
+    .colstl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+    .fscroll{overflow-x:auto;padding:8px 18px;display:flex;gap:6px;scrollbar-width:none}
+    .fscroll::-webkit-scrollbar{display:none}
+    .fpill{flex-shrink:0;background:var(--s1);border:1px solid var(--border);color:var(--dim);padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap}
+    .fpill.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.08)}
+    .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 18px 20px}
+    .ccard{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer}
+    .ccimg{width:100%;aspect-ratio:63/88;overflow:hidden;background:var(--s2)}
+    .ccimg img{width:100%;height:100%;object-fit:cover;display:block}
+    .ccft{padding:5px 7px 7px}
+    .ccn{font-size:9px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+    .ccr{display:flex;align-items:center;justify-content:space-between}
+    .ccp{font-size:10px;color:var(--gold);font-weight:600}
+    .ccq{font-size:9px;color:var(--muted);background:var(--s2);padding:1px 4px;border-radius:3px}
+    .colempty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
+    .profcard{margin:14px 18px;background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center}
+    .profav{font-size:50px;margin-bottom:10px}
+    .profn{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:2px}
+    .profr{font-size:12px;color:var(--dim);margin-bottom:16px}
+    .profst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .pst{background:var(--s2);border-radius:10px;padding:10px 6px;text-align:center}
+    .pstv{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);font-weight:700}
+    .pstl{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+    .achbox{margin:0 18px 14px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .acht{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);margin-bottom:12px}
+    .achgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .achi{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;opacity:.4}
+    .achi.ok{opacity:1;border-color:var(--gold);background:rgba(212,168,67,.06)}
+    .achic{font-size:22px;margin-bottom:5px}
+    .achn{font-size:10px;font-weight:500;color:var(--dim)}
+    .achi.ok .achn{color:var(--gold)}
+    .namebox{margin:0 18px 14px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .nameboxt{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:10px}
+    .namerow{display:flex;gap:8px}
+    .nameinp{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-size:14px;outline:none}
+    .namesave{background:var(--gold);color:#06040a;border:none;border-radius:10px;padding:10px 14px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer}
+    .lbitem{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:7px}
+    .lbitem.gold{border-color:var(--gold)} .lbitem.me{border-color:rgba(41,128,185,.5);background:rgba(41,128,185,.05)}
+    .lbrk{font-family:'Cinzel',serif;font-size:18px;font-weight:900;width:28px;text-align:center}
+    .lbrk.r1{color:var(--gold)} .lbrk.r2{color:#c0c0c0} .lbrk.r3{color:#cd7f32}
+    .lbav{font-size:26px;width:36px;text-align:center}
+    .lbinf{flex:1;min-width:0}
+    .lbn{font-weight:500;font-size:13px}
+    .lbd{font-size:10px;color:var(--dim);margin-top:2px}
+    .lbsc{text-align:right}
+    .lbscv{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);font-weight:700}
+    .lbscl{font-size:9px;color:var(--muted)}
+    .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--s2);border:1px solid var(--gold);color:var(--text);padding:10px 18px;border-radius:10px;font-size:13px;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 30px);overflow:hidden;text-overflow:ellipsis}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
 </head>
 <body>
-<nav class="bnav">
-  <button class="bi active" onclick="goPage('home',this)"><div class="bi-ico">&#x1F3F4;&#x200D;&#x2620;&#xFE0F;</div><div class="bi-lbl">Accueil</div></button>
-  <button class="bi" onclick="goPage('booster',this)"><div class="bi-ico">&#x1F004;</div><div class="bi-lbl">Ouvrir</div></button>
-  <button class="bi" onclick="goPage('prices',this)"><div class="bi-ico">&#x1F4B0;</div><div class="bi-lbl">Prix</div></button>
-  <button class="bi" onclick="goPage('collection',this)"><div class="bi-ico">&#x1F4E6;</div><div class="bi-lbl">Collection</div></button>
-  <button class="bi" onclick="goPage('profile',this)"><div class="bi-ico">&#x2693;</div><div class="bi-lbl">Profil</div></button>
-</nav>
-<div class="grays" id="godRays"></div>
-<div class="page active" id="home-page">
-  <div class="topbar"><div class="tlogo">OnePiecePack</div><div class="tstat" id="tstat">0 packs</div></div>
-  <div class="hero">
-    <div class="hbadge">Simulateur One Piece TCG</div>
-    <h1 class="htitle">OUVRE<br>TES<br>BOOSTERS</h1>
-    <p class="hsub">Toutes les cartes OP01-OP15 chargees automatiquement.</p>
-    <div class="hbtns">
-      <button class="btn-g" onclick="goPage('booster',document.querySelectorAll('.bi')[1])">Ouvrir un booster</button>
-      <button class="btn-o" onclick="goPage('prices',document.querySelectorAll('.bi')[2])">Prix des cartes</button>
-    </div>
-    <div class="hstats">
-      <div class="hst"><div class="hstv" id="h1">0</div><div class="hstl">Packs</div></div>
-      <div class="hst"><div class="hstv" id="h2">0</div><div class="hstl">Cartes</div></div>
-      <div class="hst"><div class="hstv" id="h3">0</div><div class="hstl">God Packs</div></div>
-    </div>
-    <div class="fgrid">
-      <div class="fc" onclick="goPage('booster',document.querySelectorAll('.bi')[1])"><div class="fci">&#x1F004;</div><div class="fct">Simulateur</div><div class="fcd">OP01-OP15 complet</div></div>
-      <div class="fc" onclick="goPage('prices',document.querySelectorAll('.bi')[2])"><div class="fci">&#x1F4C8;</div><div class="fct">Prix</div><div class="fcd">Cardmarket direct</div></div>
-      <div class="fc" onclick="goPage('collection',document.querySelectorAll('.bi')[3])"><div class="fci">&#x1F4E6;</div><div class="fct">Collection</div><div class="fcd">Gere tes cartes</div></div>
-      <div class="fc" onclick="goPage('profile',document.querySelectorAll('.bi')[4])"><div class="fci">&#x1F3C6;</div><div class="fct">Classement</div><div class="fcd">God Pack Leaderboard</div></div>
-    </div>
-    <div id="homeStatus" style="margin-top:16px;font-size:12px;color:var(--dim);text-align:center;line-height:1.8"></div>
-  </div>
-</div>
-<div class="page" id="booster-page">
-  <div class="topbar"><div class="tlogo">Simulateur</div><div class="tstat" id="bstat">0 packs</div></div>
-  <div class="stitle">Choisis ton set</div>
-  <div class="sscroll" id="setsScroll"></div>
-  <div class="packarea">
-    <div class="packwrap" id="packVis" onclick="doOpen(1)"></div>
-    <div class="pnl" id="pnl">OP01</div>
-    <div class="pnn" id="pnn">Romance Dawn</div>
-    <div class="pnm" id="pnm">Chargement...</div>
-    <div class="obtns">
-      <button class="obmain" onclick="doOpen(1)">Ouvrir 1 booster</button>
-      <button class="obsec" onclick="doOpen(10)">x10 packs</button>
-      <button class="obsec" onclick="doOpen(24)">Display x24</button>
+  <nav class="bnav">
+    <button class="bi active" onclick="goPage('home',this)"><div class="bi-ico">🏴‍☠️</div><div class="bi-lbl">Accueil</div></button>
+    <button class="bi" onclick="goPage('booster',this)"><div class="bi-ico">🀄</div><div class="bi-lbl">Ouvrir</div></button>
+    <button class="bi" onclick="goPage('prices',this)"><div class="bi-ico">💰</div><div class="bi-lbl">Prix</div></button>
+    <button class="bi" onclick="goPage('collection',this)"><div class="bi-ico">📦</div><div class="bi-lbl">Collection</div></button>
+    <button class="bi" onclick="goPage('profile',this)"><div class="bi-ico">⚓</div><div class="bi-lbl">Profil</div></button>
+  </nav>
+
+  <div class="grays" id="godRays"></div>
+
+  <div class="page active" id="home-page">
+    <div class="topbar"><div class="tlogo">OnePiecePack</div><div class="tstat" id="tstat">0 pack</div></div>
+    <div class="hero">
+      <div class="hbadge">Simulateur One Piece TCG</div>
+      <h1 class="htitle">OUVRE<br>TES<br>BOOSTERS</h1>
+      <p class="hsub">Toutes les cartes OP01 à OP15 chargées automatiquement.</p>
+      <div class="hbtns">
+        <button class="btn-g" onclick="goPage('booster',document.querySelectorAll('.bi')[1])">Ouvrir un booster</button>
+        <button class="btn-o" onclick="goPage('prices',document.querySelectorAll('.bi')[2])">Prix des cartes</button>
+      </div>
+      <div class="hstats">
+        <div class="hst"><div class="hstv" id="h1">0</div><div class="hstl">Packs</div></div>
+        <div class="hst"><div class="hstv" id="h2">0</div><div class="hstl">Cartes</div></div>
+        <div class="hst"><div class="hstv" id="h3">0</div><div class="hstl">God Packs</div></div>
+      </div>
+      <div class="fgrid">
+        <div class="fc" onclick="goPage('booster',document.querySelectorAll('.bi')[1])"><div class="fci">🀄</div><div class="fct">Simulateur</div><div class="fcd">OP01 à OP15 complet</div></div>
+        <div class="fc" onclick="goPage('prices',document.querySelectorAll('.bi')[2])"><div class="fci">📈</div><div class="fct">Prix</div><div class="fcd">Liens Cardmarket / TCGPlayer</div></div>
+        <div class="fc" onclick="goPage('collection',document.querySelectorAll('.bi')[3])"><div class="fci">📦</div><div class="fct">Collection</div><div class="fcd">Gère tes cartes</div></div>
+        <div class="fc" onclick="goPage('profile',document.querySelectorAll('.bi')[4])"><div class="fci">🏆</div><div class="fct">Classement</div><div class="fcd">Leaderboard God Pack</div></div>
+      </div>
+      <div id="homeStatus" style="margin-top:16px;font-size:12px;color:var(--dim);text-align:center;line-height:1.8"></div>
     </div>
   </div>
-  <div class="pbox">
-    <div class="pboxt">Probabilites officielles</div>
-    <div class="prow"><div class="plbl" style="color:var(--gold)">Secret Rare</div><div class="pbg"><div class="pbf" style="width:8%;background:var(--gold)"></div></div><div class="ppct" style="color:var(--gold)">~1/12</div></div>
-    <div class="prow"><div class="plbl" style="color:var(--red)">Super Rare</div><div class="pbg"><div class="pbf" style="width:20%;background:var(--red)"></div></div><div class="ppct" style="color:var(--red)">~1/5</div></div>
-    <div class="prow"><div class="plbl" style="color:var(--blue)">Rare</div><div class="pbg"><div class="pbf" style="width:44%;background:var(--blue)"></div></div><div class="ppct" style="color:var(--blue)">~1/2.3</div></div>
-    <div class="prow"><div class="plbl" style="color:var(--muted)">Common/UC</div><div class="pbg"><div class="pbf" style="width:100%;background:var(--muted)"></div></div><div class="ppct" style="color:var(--muted)">Garantie</div></div>
-    <div class="gnote"><strong style="color:var(--gold)">God Pack :</strong> 1 chance sur 360 - 12 Secret Rare !</div>
-  </div>
-  <div class="affbox">
-    <div class="afft">Achete tes vrais boosters</div>
-    <div class="affs">Meilleurs prix - soutiens le site</div>
-    <div class="affbtns">
-      <a class="abtn cm" href="https://www.cardmarket.com/en/OnePiece/Products/Boosters" target="_blank">Cardmarket</a>
-      <a class="abtn tcp" href="https://www.tcgplayer.com/search/one-piece-card-game/booster-pack" target="_blank">TCGPlayer</a>
+
+  <div class="page" id="booster-page">
+    <div class="topbar"><div class="tlogo">Simulateur</div><div class="tstat" id="bstat">0 pack</div></div>
+    <div class="stitle">Choisis ton set</div>
+    <div class="sscroll" id="setsScroll"></div>
+    <div class="packarea">
+      <div class="packwrap" id="packVis" onclick="doOpen(1)"></div>
+      <div class="pnl" id="pnl">OP01</div>
+      <div class="pnn" id="pnn">Romance Dawn</div>
+      <div class="pnm" id="pnm">Chargement...</div>
+      <div class="obtns">
+        <button class="obmain" onclick="doOpen(1)">Ouvrir 1 booster</button>
+        <button class="obsec" onclick="doOpen(10)">x10 packs</button>
+        <button class="obsec" onclick="doOpen(24)">Display x24</button>
+      </div>
+    </div>
+    <div class="pbox">
+      <div class="pboxt">Probabilités simulées</div>
+      <div class="prow"><div class="plbl" style="color:var(--gold)">Secret Rare</div><div class="pbg"><div class="pbf" style="width:8%;background:var(--gold)"></div></div><div class="ppct" style="color:var(--gold)">~1/12</div></div>
+      <div class="prow"><div class="plbl" style="color:var(--red)">Super Rare</div><div class="pbg"><div class="pbf" style="width:20%;background:var(--red)"></div></div><div class="ppct" style="color:var(--red)">~1/5</div></div>
+      <div class="prow"><div class="plbl" style="color:var(--blue)">Rare</div><div class="pbg"><div class="pbf" style="width:44%;background:var(--blue)"></div></div><div class="ppct" style="color:var(--blue)">~1/2.3</div></div>
+      <div class="prow"><div class="plbl" style="color:var(--muted)">Common / UC</div><div class="pbg"><div class="pbf" style="width:100%;background:var(--muted)"></div></div><div class="ppct" style="color:var(--muted)">Garanti</div></div>
+      <div class="gnote"><strong style="color:var(--gold)">God Pack :</strong> 1 chance sur 360 - 12 Secret Rare</div>
+    </div>
+    <div class="affbox">
+      <div class="afft">Achète tes vrais boosters</div>
+      <div class="affs">Meilleurs prix - soutiens le site</div>
+      <div class="affbtns">
+        <a class="abtn cm" href="https://www.cardmarket.com/en/OnePiece/Products/Boosters" target="_blank" rel="noopener noreferrer">Cardmarket</a>
+        <a class="abtn tcp" href="https://www.tcgplayer.com/search/one-piece-card-game/booster-pack" target="_blank" rel="noopener noreferrer">TCGPlayer</a>
+      </div>
     </div>
   </div>
-</div>
-<div class="page" id="prices-page">
-  <div class="topbar"><div class="tlogo">Prix des Cartes</div><div class="tstat" id="priceCount">0 cartes</div></div>
-  <div style="padding:12px 18px 0">
-    <div class="affbtns" style="margin-bottom:12px">
-      <a class="abtn cm" href="https://www.cardmarket.com/en/OnePiece" target="_blank">Cardmarket</a>
-      <a class="abtn tcp" href="https://www.tcgplayer.com/search/one-piece-card-game/product" target="_blank">TCGPlayer</a>
+
+  <div class="page" id="prices-page">
+    <div class="topbar"><div class="tlogo">Prix des cartes</div><div class="tstat" id="priceCount">0 carte</div></div>
+    <div style="padding:12px 18px 0">
+      <div class="affbtns" style="margin-bottom:12px">
+        <a class="abtn cm" href="https://www.cardmarket.com/en/OnePiece" target="_blank" rel="noopener noreferrer">Cardmarket</a>
+        <a class="abtn tcp" href="https://www.tcgplayer.com/search/one-piece-card-game/product" target="_blank" rel="noopener noreferrer">TCGPlayer</a>
+      </div>
+    </div>
+    <div class="sbar"><input class="sinp" id="priceQ" type="text" placeholder="Nom, ID (ex : OP01-120)..." oninput="filterPrices()"><span class="sico">⌕</span></div>
+    <div id="priceList" class="plist"></div>
+  </div>
+
+  <div class="page" id="collection-page">
+    <div class="topbar"><div class="tlogo">Ma collection</div></div>
+    <div class="colhdr">
+      <div class="colsr">
+        <div class="colst"><div class="colstv" id="cCards">0</div><div class="colstl">Cartes</div></div>
+        <div class="colst"><div class="colstv" id="cValue">0 EUR</div><div class="colstl">Valeur</div></div>
+        <div class="colst"><div class="colstv" id="cUniq">0</div><div class="colstl">Uniques</div></div>
+      </div>
+    </div>
+    <div class="fscroll">
+      <button class="fpill active" onclick="setF('all',this)">Toutes</button>
+      <button class="fpill" onclick="setF('SEC',this)">Secret Rare</button>
+      <button class="fpill" onclick="setF('SR',this)">Super Rare</button>
+      <button class="fpill" onclick="setF('R',this)">Rare</button>
+      <button class="fpill" onclick="setF('UC',this)">Uncommon</button>
+      <button class="fpill" onclick="setF('C',this)">Common</button>
+      <button class="fpill" onclick="setF('L',this)">Leader</button>
+    </div>
+    <div class="cgrid" id="colGrid"></div>
+  </div>
+
+  <div class="page" id="profile-page">
+    <div class="topbar"><div class="tlogo">Mon profil</div></div>
+    <div class="profcard">
+      <div class="profav">🏴‍☠️</div>
+      <div class="profn" id="profN">Capitaine</div>
+      <div class="profr" id="profR">Recrue</div>
+      <div class="profst">
+        <div class="pst"><div class="pstv" id="ps1">0</div><div class="pstl">Packs</div></div>
+        <div class="pst"><div class="pstv" id="ps2">0</div><div class="pstl">Cartes</div></div>
+        <div class="pst"><div class="pstv" id="ps3">0</div><div class="pstl">God Packs</div></div>
+      </div>
+    </div>
+    <div class="achbox"><div class="acht">Succès</div><div class="achgrid" id="achGrid"></div></div>
+    <div class="achbox" style="margin:0 18px 14px"><div class="acht">God Pack Leaderboard</div><div id="lbList"></div></div>
+    <div class="namebox">
+      <div class="nameboxt">Changer de pseudo</div>
+      <div class="namerow"><input class="nameinp" id="nameIn" type="text" placeholder="Ton nom de pirate..."><button class="namesave" onclick="saveName()">OK</button></div>
     </div>
   </div>
-  <div class="sbar"><input class="sinp" id="priceQ" type="text" placeholder="Nom, ID (ex: OP01-120)..." oninput="filterPrices()"><span class="sico">&#9906;</span></div>
-  <div id="priceList" class="plist"></div>
-</div>
-<div class="page" id="collection-page">
-  <div class="topbar"><div class="tlogo">Ma Collection</div></div>
-  <div class="colhdr">
-    <div class="colsr">
-      <div class="colst"><div class="colstv" id="cCards">0</div><div class="colstl">Cartes</div></div>
-      <div class="colst"><div class="colstv" id="cValue">0 EUR</div><div class="colstl">Valeur</div></div>
-      <div class="colst"><div class="colstv" id="cUniq">0</div><div class="colstl">Uniques</div></div>
+
+  <div class="roverlay" id="revOv">
+    <div class="rtop"><div class="rtt" id="rtt">Booster ouvert !</div><div class="rts">1er tap = retourne - 2e tap = détail</div></div>
+    <div class="fgrd" id="flipGrid"></div>
+    <div class="ract">
+      <button class="radd" onclick="addAll()">Tout ajouter à ma collection</button>
+      <button class="ragain" onclick="openAgain()">Encore !</button>
+      <button class="rclose" onclick="closeRev()">Fermer</button>
     </div>
   </div>
-  <div class="fscroll">
-    <button class="fpill active" onclick="setF('all',this)">Toutes</button>
-    <button class="fpill" onclick="setF('SEC',this)">Secret Rare</button>
-    <button class="fpill" onclick="setF('SR',this)">Super Rare</button>
-    <button class="fpill" onclick="setF('R',this)">Rare</button>
-    <button class="fpill" onclick="setF('UC',this)">Uncommon</button>
-    <button class="fpill" onclick="setF('C',this)">Common</button>
-  </div>
-  <div class="cgrid" id="colGrid"></div>
-</div>
-<div class="page" id="profile-page">
-  <div class="topbar"><div class="tlogo">Mon Profil</div></div>
-  <div class="profcard">
-    <div class="profav">&#x1F3F4;&#x200D;&#x2620;&#xFE0F;</div>
-    <div class="profn" id="profN">Capitaine</div>
-    <div class="profr" id="profR">Recrue</div>
-    <div class="profst">
-      <div class="pst"><div class="pstv" id="ps1">0</div><div class="pstl">Packs</div></div>
-      <div class="pst"><div class="pstv" id="ps2">0</div><div class="pstl">Cartes</div></div>
-      <div class="pst"><div class="pstv" id="ps3">0</div><div class="pstl">God Packs</div></div>
+
+  <div class="czoom" id="czoom">
+    <div class="czoom-head">
+      <button class="czoom-back" onclick="closeCzoom()">← Retour</button>
+      <button class="czoom-close" onclick="closeCzoom()">×</button>
+    </div>
+    <div class="czoom-img" id="cz-img"></div>
+    <div class="czoom-info">
+      <div class="czoom-id" id="cz-id"></div>
+      <div class="czoom-name" id="cz-name"></div>
+      <div class="czoom-sub" id="cz-sub"></div>
+      <div class="czoom-price" id="cz-price"></div>
+      <div class="czoom-btns">
+        <a class="czoom-btn cm" id="cz-cm" href="#" target="_blank" rel="noopener noreferrer">Cardmarket</a>
+        <a class="czoom-btn tcp" id="cz-tcp" href="#" target="_blank" rel="noopener noreferrer">TCGPlayer</a>
+      </div>
     </div>
   </div>
-  <div class="achbox"><div class="acht">Succes</div><div class="achgrid" id="achGrid"></div></div>
-  <div class="achbox" style="margin:0 18px 14px"><div class="acht">God Pack Leaderboard</div><div id="lbList"></div></div>
-  <div class="namebox">
-    <div class="nameboxt">Changer de pseudo</div>
-    <div class="namerow"><input class="nameinp" id="nameIn" type="text" placeholder="Ton nom de pirate..."><button class="namesave" onclick="saveName()">OK</button></div>
-  </div>
-</div>
-<div class="roverlay" id="revOv">
-  <div class="rtop"><div class="rtt" id="rtt">Booster ouvert !</div><div class="rts">1er tap = retourne - 2e tap = detail</div></div>
-  <div class="fgrd" id="flipGrid"></div>
-  <div class="ract">
-    <button class="radd" onclick="addAll()">Tout ajouter a ma collection</button>
-    <button class="ragain" onclick="openAgain()">Encore !</button>
-    <button class="rclose" onclick="closeRev()">Fermer</button>
-  </div>
-</div>
-<div class="czoom" id="czoom">
-  <div class="czoom-head">
-    <button class="czoom-back" onclick="closeCzoom()">&#x2190; Retour</button>
-    <button class="czoom-close" onclick="closeCzoom()">&#x00D7;</button>
-  </div>
-  <div class="czoom-img" id="cz-img"></div>
-  <div class="czoom-info">
-    <div class="czoom-id" id="cz-id"></div>
-    <div class="czoom-name" id="cz-name"></div>
-    <div class="czoom-sub" id="cz-sub"></div>
-    <div class="czoom-price" id="cz-price"></div>
-    <div class="czoom-btns">
-      <a class="czoom-btn cm" id="cz-cm" href="#" target="_blank">Cardmarket</a>
-      <a class="czoom-btn tcp" id="cz-tcp" href="#" target="_blank">TCGPlayer</a>
-    </div>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-<script>
-var S={packs:0,cards:0,godPacks:0,user:'Capitaine',col:{},set:'OP01',last:1};
-var CARDS_DB=[];
-var SETS=[
-  {id:'OP01',name:'Romance Dawn',color:['#1a3a6e','#0d1f3c','#4a90d9']},
-  {id:'OP02',name:'Paramount War',color:['#6e1a1a','#3d0606','#e74c3c']},
-  {id:'OP03',name:'Pillars of Strength',color:['#2d1a5e','#160d30','#9b59b6']},
-  {id:'OP04',name:'Kingdoms of Intrigue',color:['#5e1a4a','#2d0920','#e91e8c']},
-  {id:'OP05',name:'Awakening New Era',color:['#1a5e2d','#0d3016','#2ecc71']},
-  {id:'OP06',name:'Wings of Captain',color:['#4a3a00','#2a2000','#d4a843']},
-  {id:'OP07',name:'500 Years Future',color:['#003a4a','#001f2a','#00bcd4']},
-  {id:'OP08',name:'Two Legends',color:['#2a0050','#150028','#8b00ff']},
-  {id:'OP09',name:'Four Emperors',color:['#3a0a00','#200500','#ff5722']},
-  {id:'OP10',name:'Royal Blood',color:['#003020','#001810','#009688']},
-  {id:'OP11',name:'Emperors New World',color:['#1a0030','#0d0018','#7c4dff']},
-  {id:'OP12',name:'Legacy of Master',color:['#002a3a','#001520','#03a9f4']},
-  {id:'OP13',name:'Carrying on His Will',color:['#2a2000','#151000','#ff9800']},
-  {id:'OP14',name:'Azure Seas Seven',color:['#002a00','#001500','#4caf50']},
-  {id:'OP15',name:'Adv. Kamis Island',color:['#3a1a00','#1e0d00','#ff6b35'],isNew:true},
-];
-var RL={SEC:'SECRET RARE',SR:'SUPER RARE',R:'RARE',UC:'UNCOMMON',C:'COMMON',L:'LEADER'};
-var RC={SEC:'#d4a843',SR:'#e74c3c',R:'#2980b9',UC:'#7f8c8d',C:'#5a6070',L:'#9b59b6'};
-var PRICE_EST={SEC:20,SR:5,R:1.5,UC:0.5,C:0.2,L:3};
-var RW={SEC:0,SR:1,R:2,UC:3,C:4,L:5};
 
-function linkCM(card){
-  var n=card.name.replace(/\./g,'').replace(/\s+/g,'').replace(/[^a-zA-Z0-9]/g,'');
-  return 'https://www.cardmarket.com/en/OnePiece/Cards/'+n+'-'+card.id+'/Versions';
-}
-function linkTCP(card){
-  return 'https://www.tcgplayer.com/search/one-piece-card-game/product?q='+encodeURIComponent(card.id);
-}
-function imgUrl(id){
-  var p=id.split('-');
-  return 'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/'+p[0]+'/'+id+'_EN.webp';
-}
+  <div class="toast" id="toast"></div>
 
-function makeSVG(card){
-  var sd=SETS.find(function(s){return s.id===card.set;});
-  var col=sd?sd.color:['#1a1a3e','#4a90d9'];
-  var rc=RC[card.rarity]||'#888';
-  var uid=card.id.replace(/[^a-z0-9]/gi,'x');
-  var nm=card.name.length>16?card.name.slice(0,15)+'...':card.name;
-  var shape=card.rarity==='SEC'
-    ?'<path d="M60,45 L68,67 L92,67 L73,80 L80,102 L60,89 L40,102 L47,80 L28,67 L52,67Z" fill="'+rc+'" fill-opacity="0.85"/>'
-    :card.rarity==='SR'
-    ?'<ellipse cx="60" cy="75" rx="26" ry="26" fill="'+rc+'" fill-opacity="0.1" stroke="'+rc+'" stroke-width="2"/><polygon points="60,52 69,72 60,92 51,72" fill="'+rc+'" fill-opacity="0.7"/>'
-    :card.rarity==='R'
-    ?'<rect x="37" y="52" width="46" height="46" rx="7" fill="'+rc+'" fill-opacity="0.18" stroke="'+rc+'" stroke-width="1.5" transform="rotate(15,60,75)"/>'
-    :'<circle cx="60" cy="75" r="18" fill="'+rc+'" fill-opacity="0.1" stroke="'+rc+'" stroke-width="1.5"/>';
-  return '<svg viewBox="0 0 120 168" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs><linearGradient id="g'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+col[0]+'"/><stop offset="100%" stop-color="'+col[0]+'" stop-opacity="0.6"/></linearGradient></defs>'
-    +'<rect width="120" height="168" rx="8" fill="url(#g'+uid+')"/>'
-    +'<rect x="3" y="3" width="114" height="162" rx="6" fill="none" stroke="'+rc+'" stroke-opacity="0.5" stroke-width="1.5"/>'
-    +'<rect x="3" y="3" width="114" height="17" fill="'+rc+'" fill-opacity="0.18"/>'
-    +'<text x="8" y="14" font-size="6" font-family="monospace" fill="'+rc+'" font-weight="bold">'+card.id+'</text>'
-    +'<text x="117" y="14" font-size="5.5" font-family="monospace" fill="'+rc+'" text-anchor="end">'+(RL[card.rarity]||card.rarity)+'</text>'
-    +shape
-    +'<rect x="8" y="115" width="104" height="36" rx="4" fill="rgba(0,0,0,0.72)"/>'
-    +'<text x="60" y="126" font-size="'+(nm.length>14?7:9)+'" font-family="Georgia,serif" font-weight="bold" fill="#f0e8d8" text-anchor="middle">'+nm+'</text>'
-    +'<text x="60" y="139" font-size="6" font-family="monospace" fill="'+rc+'" fill-opacity="0.8" text-anchor="middle">'+card.set+'</text>'
-    +'<text x="12" y="156" font-size="7" font-family="monospace" fill="#f0e8d8">'+(card.pw||'')+'</text>'
-    +'<circle cx="108" cy="153" r="8" fill="'+col[0]+'" stroke="'+rc+'" stroke-width="1.5"/>'
-    +'<circle cx="108" cy="153" r="4" fill="'+rc+'" fill-opacity="0.85"/>'
-    +'</svg>';
-}
+  <script>
+    const STORAGE_KEY = "onepiecepack_save_v2";
 
-window.imgFail=function(el){
-  try{
-    if(!el||!el.style)return;
-    el.style.display='none';
-    var p=el.parentNode;
-    if(p){var fb=p.querySelector('.svg-fb');if(fb)fb.style.display='block';}
-  }catch(e){}
-};
+    const SETS = [
+      { id:"OP01", name:"Romance Dawn", color:["#1a3a6e","#0d1f3c","#4a90d9"] },
+      { id:"OP02", name:"Paramount War", color:["#6e1a1a","#3d0606","#e74c3c"] },
+      { id:"OP03", name:"Pillars of Strength", color:["#2d1a5e","#160d30","#9b59b6"] },
+      { id:"OP04", name:"Kingdoms of Intrigue", color:["#5e1a4a","#2d0920","#e91e8c"] },
+      { id:"OP05", name:"Awakening of the New Era", color:["#1a5e2d","#0d3016","#2ecc71"] },
+      { id:"OP06", name:"Wings of the Captain", color:["#4a3a00","#2a2000","#d4a843"] },
+      { id:"OP07", name:"500 Years in the Future", color:["#003a4a","#001f2a","#00bcd4"] },
+      { id:"OP08", name:"Two Legends", color:["#2a0050","#150028","#8b00ff"] },
+      { id:"OP09", name:"The Four Emperors", color:["#3a0a00","#200500","#ff5722"] },
+      { id:"OP10", name:"Royal Blood", color:["#003020","#001810","#009688"] },
+      { id:"OP11", name:"A Fist of Divine Speed", color:["#1a0030","#0d0018","#7c4dff"] },
+      { id:"OP12", name:"Legacy of the Master", color:["#002a3a","#001520","#03a9f4"] },
+      { id:"OP13", name:"Carrying on His Will", color:["#2a2000","#151000","#ff9800"] },
+      { id:"OP14", name:"Seven Warlords of the Sea", color:["#002a00","#001500","#4caf50"] },
+      { id:"OP15", name:"Adventure in Kami's Island", color:["#3a1a00","#1e0d00","#ff6b35"], isNew:true }
+    ];
 
-function mkImg(card,style){
-  var u=imgUrl(card.id);
-  return '<div style="position:relative;width:100%;height:100%;overflow:hidden">'
-    +'<img src="'+u+'" style="'+style+'" onerror="window.imgFail&&window.imgFail(this)">'
-    +'<div class="svg-fb" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%">'+makeSVG(card)+'</div>'
-    +'</div>';
-}
+    const RL = { SEC:"SECRET RARE", SR:"SUPER RARE", R:"RARE", UC:"UNCOMMON", C:"COMMON", L:"LEADER" };
+    const RC = { SEC:"#d4a843", SR:"#e74c3c", R:"#2980b9", UC:"#7f8c8d", C:"#5a6070", L:"#9b59b6" };
+    const PRICE_EST = { SEC:20, SR:5, R:1.5, UC:.5, C:.2, L:3 };
+    const RW = { SEC:0, SR:1, R:2, UC:3, C:4, L:5 };
 
-function packSVG(s){
-  var c=s.color,c1=c[0],c2=c[1]||c[0],acc=c[2]||'#d4a843';
-  var nm=s.name.length>18?s.name.slice(0,17)+'...':s.name;
-  return '<svg viewBox="0 0 130 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">'
-    +'<defs><linearGradient id="pk'+s.id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="'+c1+'"/><stop offset="100%" stop-color="'+c2+'"/></linearGradient>'
-    +'<linearGradient id="pks'+s.id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.18)"/><stop offset="100%" stop-color="rgba(0,0,0,0.4)"/></linearGradient></defs>'
-    +'<rect width="130" height="195" rx="10" fill="url(#pk'+s.id+')"/>'
-    +'<rect width="130" height="195" rx="10" fill="url(#pks'+s.id+')"/>'
-    +'<rect x="5" y="5" width="120" height="185" rx="7" fill="none" stroke="'+acc+'" stroke-opacity="0.75" stroke-width="2.5"/>'
-    +'<circle cx="65" cy="90" r="46" fill="none" stroke="'+acc+'" stroke-opacity="0.15" stroke-width="1.5"/>'
-    +'<path d="M65,57 L76.5,82 L103,82 L82,97.5 L90,122 L65,107 L40,122 L48,97.5 L27,82 L53.5,82Z" fill="'+acc+'" fill-opacity="0.88"/>'
-    +'<text x="65" y="138" font-family="Cinzel,Georgia,serif" font-size="13" font-weight="900" fill="'+acc+'" text-anchor="middle" letter-spacing="3">'+s.id+'</text>'
-    +'<text x="65" y="157" font-family="Georgia,serif" font-size="7" fill="#f0e8d8" fill-opacity="0.85" text-anchor="middle">'+nm+'</text>'
-    +'<text x="65" y="173" font-family="monospace" font-size="6" fill="'+acc+'" fill-opacity="0.4" text-anchor="middle">ONE PIECE TCG</text>'
-    +'</svg>';
-}
+    const ACHS = [
+      { icon:"🂠", name:"1er Pack", ok:(s)=>s.packs>=1 },
+      { icon:"🌟", name:"God Pack", ok:(s)=>s.godPacks>=1 },
+      { icon:"💯", name:"100 Packs", ok:(s)=>s.packs>=100 },
+      { icon:"💎", name:"Collectionneur", ok:(s)=>Object.keys(s.col).length>=30 },
+      { icon:"🔥", name:"Secret Rare", ok:(s)=>Object.keys(s.col).some(id=>getCard(id).rarity==="SEC") },
+      { icon:"👑", name:"1000 Cartes", ok:(s)=>s.cards>=1000 }
+    ];
 
-function normalizeRarity(r){
-  var m={'SEC':'SEC','SR':'SR','R':'R','UC':'UC','C':'C','Secret Rare':'SEC','Super Rare':'SR','Rare':'R','Uncommon':'UC','Common':'C','L':'L','Leader':'L'};
-  return m[r]||'C';
-}
+    const RANKS = [
+      [0,"Recrue"], [10,"Pirate junior"], [50,"Chasseur de cartes"],
+      [100,"Capitaine TCG"], [500,"Grand Line Master"], [1000,"Roi des Pirates"]
+    ];
 
-var setsLoaded=0;
-var totalSets=SETS.length;
+    const LB = [
+      { rank:1, name:"Luffy_Fan99", av:"🏴‍☠️", det:"God Pack OP05", gp:12 },
+      { rank:2, name:"ZoroSensei", av:"⚔️", det:"God Pack OP08", gp:9 },
+      { rank:3, name:"NamiSwaN", av:"🗺️", det:"God Pack OP01", gp:7 },
+      { rank:4, name:"SanjiFr", av:"🦵", det:"5x SEC en 1 pack", gp:5 },
+      { rank:5, name:"ChopperMD", av:"🦌", det:"3x God Pack", gp:3 }
+    ];
 
-function loadAllSets(){
-  var st=document.getElementById('homeStatus');
-  if(st)st.innerHTML='Chargement des cartes OP01-OP15...';
-  var apiSets=['OP01','OP02','OP03','OP04','OP05','OP06','OP07','OP08','OP09','OP10','OP11','OP12'];
-  var localSets=['OP13','OP14','OP15'];
-  var pending=apiSets.length;
-  apiSets.forEach(function(sid){
-    fetch('https://optcgapi.com/api/sets/'+sid+'/')
-      .then(function(r){return r.json();})
-      .then(function(data){
-        var list=Array.isArray(data)?data:(data.cards||data.results||[]);
-        list.forEach(function(c){
-          var r=normalizeRarity(c.rarity||c.card_rarity||'C');
-          var price=parseFloat(c.market_price||c.price||PRICE_EST[r]||0.5);
-          CARDS_DB.push({
-            id:c.card_id||c.id||sid+'-000',
-            name:c.name||c.card_name||sid,
-            set:sid,rarity:r,
-            price:isNaN(price)?(PRICE_EST[r]||0.5):price,
-            pw:parseInt(c.power||0),cost:parseInt(c.cost||0),
-            color:c.color||''
-          });
-        });
-        setsLoaded++;updateProgress();
-        pending--;if(pending===0){localSets.forEach(addLocalSet);onDone();}
-      })
-      .catch(function(){
-        addLocalSet(sid);setsLoaded++;updateProgress();
-        pending--;if(pending===0){localSets.forEach(addLocalSet);onDone();}
-      });
-  });
-}
+    let S = { packs:0, cards:0, godPacks:0, user:"Capitaine", col:{}, set:"OP01", last:1 };
+    let CARDS_DB = [];
+    let CARD_BY_ID = {};
+    let CARDS_BY_SET = {};
+    let curCards = [];
+    let colF = "all";
+    let priceFilter = "";
 
-function addLocalSet(sid){
-  var sizes={OP01:121,OP02:117,OP03:123,OP04:119,OP05:119,OP06:119,OP07:119,OP08:119,OP09:120,OP10:119,OP11:119,OP12:119,OP13:120,OP14:120,OP15:118};
-  var total=sizes[sid]||118;
-  var secMap={OP01:[120,121],OP02:[13,99],OP03:[121,123],OP04:[83,119],OP05:[118,119],OP06:[118,119],OP07:[118,119],OP08:[118,119],OP09:[118,119,120],OP10:[118,119],OP11:[118,119],OP12:[118,119],OP13:[118,119,120],OP14:[119,120],OP15:[118,119]};
-  var secs=secMap[sid]||[];
-  for(var i=1;i<=total;i++){
-    if(CARDS_DB.find(function(c){return c.id===sid+'-'+String(i).padStart(3,'0');}))continue;
-    var num=String(i).padStart(3,'0');
-    var id=sid+'-'+num;
-    var r='C';
-    if(secs.indexOf(i)!==-1)r='SEC';
-    else if(i<=5)r='L';
-    else if(i<=25)r='SR';
-    else if(i<=55)r='R';
-    else if(i<=85)r='UC';
-    CARDS_DB.push({id:id,name:id,set:sid,rarity:r,price:PRICE_EST[r]||0.2,pw:0,cost:0,color:''});
-  }
-  setsLoaded++;
-  updateProgress();
-}
-
-function updateProgress(){
-  var st=document.getElementById('homeStatus');
-  if(st)st.innerHTML='<span style="color:var(--gold)">'+setsLoaded+'/'+totalSets+' sets</span> <span style="color:var(--dim)">('+CARDS_DB.length+' cartes)</span>';
-  initBooster();
-}
-
-function onDone(){
-  var st=document.getElementById('homeStatus');
-  if(st)st.innerHTML='<span style="color:var(--green)">&#10003; '+CARDS_DB.length+' cartes chargees OP01-OP15</span>';
-  initBooster();renderPrices();updStats();
-  showToast(CARDS_DB.length+' cartes chargees !');
-}
-
-function rollR(){var r=Math.random();if(r<0.083)return'SEC';if(r<0.28)return'SR';if(r<0.55)return'R';if(r<0.80)return'UC';return'C';}
-function pullCard(sid,forceR){
-  var pool=CARDS_DB.filter(function(c){return c.set===sid&&c.rarity===(forceR||rollR());});
-  if(!pool.length)pool=CARDS_DB.filter(function(c){return c.set===sid&&c.rarity==='C';});
-  if(!pool.length)pool=CARDS_DB.filter(function(c){return c.set===sid;});
-  if(!pool.length)pool=CARDS_DB.slice(0,5);
-  return pool[Math.floor(Math.random()*pool.length)];
-}
-function openPack(sid){
-  var isGod=Math.random()<(1/360),cards=[];
-  if(isGod){S.godPacks++;for(var i=0;i<12;i++)cards.push(pullCard(sid,'SEC'));return{cards:cards,isGod:true};}
-  var r0=Math.random();
-  cards.push(r0<0.083?pullCard(sid,'SEC'):r0<0.33?pullCard(sid,'SR'):pullCard(sid,'R'));
-  for(var j=1;j<12;j++)cards.push(pullCard(sid));
-  return{cards:cards,isGod:false};
-}
-
-var curCards=[];
-function doOpen(n){
-  if(!CARDS_DB.filter(function(c){return c.set===S.set;}).length){showToast('Cartes en chargement...');return;}
-  S.last=n;var all=[],anyGod=false;
-  for(var p=0;p<n;p++){var res=openPack(S.set);all=all.concat(res.cards);if(res.isGod)anyGod=true;}
-  S.packs+=n;S.cards+=all.length;curCards=all;updStats();
-  if(anyGod){document.getElementById('godRays').classList.add('show');setTimeout(function(){document.getElementById('godRays').classList.remove('show');},6000);}
-  document.getElementById('rtt').textContent=anyGod?'GOD PACK !!!':n>1?n+' boosters ouverts !':'Booster ouvert !';
-  var grid=document.getElementById('flipGrid');
-  grid.style.gridTemplateColumns='repeat('+(all.length<=12?3:4)+',1fr)';
-  var html='';
-  for(var i=0;i<all.length;i++){
-    var card=all[i];
-    var glow=card.rarity==='SEC'?'gs':card.rarity==='SR'?'gsr':card.rarity==='R'?'gr':'';
-    var front=mkImg(card,'width:100%;height:100%;object-fit:cover;border-radius:8px;display:block');
-    var sn=card.name.length>12?card.name.slice(0,11)+'...':card.name;
-    html+='<div class="fcard" onclick="tapCard('+i+')">'
-      +'<div class="finn" id="fc'+i+'"><div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
-      +'<div class="ffront '+glow+'">'+front+'</div></div>'
-      +'<div class="flbl"><div class="flname">'+sn+'</div>'
-      +'<div class="flr '+card.rarity+'">'+(RL[card.rarity]||card.rarity)+'</div></div></div>';
-  }
-  grid.innerHTML=html;
-  for(var k=0;k<all.length;k++){
-    if(all[k].rarity==='SEC'||all[k].rarity==='SR'){
-      (function(idx){setTimeout(function(){flipC(idx);},300+idx*80);})(k);
+    function safeText(v){
+      return String(v ?? "").replace(/[<>&"']/g, m => ({
+        "<":"&lt;", ">":"&gt;", "&":"&amp;", '"':"&quot;", "'":"&#39;"
+      }[m]));
     }
-  }
-  document.getElementById('revOv').classList.add('active');
-}
-function tapCard(i){var el=document.getElementById('fc'+i);if(!el.classList.contains('flipped')){el.classList.add('flipped');}else{openCzoom(curCards[i]);}}
-function flipC(i){var el=document.getElementById('fc'+i);if(el&&!el.classList.contains('flipped'))el.classList.add('flipped');}
-function closeRev(){document.getElementById('revOv').classList.remove('active');}
-function addAll(){curCards.forEach(function(c){S.col[c.id]=(S.col[c.id]||0)+1;});updStats();showToast(curCards.length+' cartes ajoutees !');closeRev();}
-function openAgain(){closeRev();setTimeout(function(){doOpen(S.last);},150);}
 
-function openCzoom(card){
-  if(!card)return;
-  var imgHtml='<div style="position:relative;width:100%;overflow:hidden;border-radius:16px">'
-    +'<img src="'+imgUrl(card.id)+'" style="width:100%;border-radius:16px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
-    +'<div class="svg-fb" style="display:none;width:100%">'+makeSVG(card)+'</div>'
-    +'</div>';
-  document.getElementById('cz-img').innerHTML=imgHtml;
-  document.getElementById('cz-id').textContent=card.id;
-  document.getElementById('cz-name').textContent=card.name;
-  document.getElementById('cz-sub').textContent=(RL[card.rarity]||card.rarity)+' - '+card.set+(card.color?' - '+card.color:'');
-  document.getElementById('cz-price').textContent=card.price.toFixed(2)+' EUR';
-  document.getElementById('cz-cm').href=linkCM(card);
-  document.getElementById('cz-tcp').href=linkTCP(card);
-  document.getElementById('czoom').classList.add('open');
-}
-function closeCzoom(){document.getElementById('czoom').classList.remove('open');}
+    function saveState(){
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); }catch(e){}
+    }
 
-function goPage(name,btn){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.bi').forEach(function(b){b.classList.remove('active');});
-  document.getElementById(name+'-page').classList.add('active');
-  if(btn)btn.classList.add('active');
-  window.scrollTo(0,0);
-  if(name==='booster')initBooster();
-  if(name==='prices')renderPrices();
-  if(name==='collection')renderCol();
-  if(name==='profile')renderProf();
-  updStats();
-}
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        S = {
+          packs:Number(d.packs||0),
+          cards:Number(d.cards||0),
+          godPacks:Number(d.godPacks||0),
+          user:d.user||"Capitaine",
+          col:(d.col && typeof d.col==="object") ? d.col : {},
+          set:d.set||"OP01",
+          last:Number(d.last||1)
+        };
+      }catch(e){}
+    }
 
-function initBooster(){
-  var html='';
-  SETS.forEach(function(s){
-    var count=CARDS_DB.filter(function(c){return c.set===s.id;}).length;
-    html+='<div class="schip'+(s.id===S.set?' active':'')+'" onclick="selSet(\''+s.id+'\',this)">'
-      +(s.isNew?'<div class="scnew">NEW</div>':'')
-      +'<div class="scnum">'+s.id+'</div><div class="scname">'+s.name+'</div>'
-      +'<div class="scbadge">'+(count>0?count+' cartes':'...')+'</div></div>';
-  });
-  document.getElementById('setsScroll').innerHTML=html;
-  updPack();
-}
-function selSet(id,el){S.set=id;document.querySelectorAll('.schip').forEach(function(c){c.classList.remove('active');});if(el)el.classList.add('active');updPack();}
-function updPack(){
-  var s=SETS.find(function(x){return x.id===S.set;})||SETS[0];
-  var count=CARDS_DB.filter(function(c){return c.set===S.set;}).length;
-  document.getElementById('pnl').textContent=s.id;
-  document.getElementById('pnn').textContent=s.name;
-  document.getElementById('pnm').textContent=count>0?count+' cartes dans ce set':'Chargement...';
-  document.getElementById('packVis').innerHTML=packSVG(s);
-}
+    function rebuildIndexes(){
+      CARD_BY_ID = {};
+      CARDS_BY_SET = {};
+      SETS.forEach(s => CARDS_BY_SET[s.id] = []);
+      for(const card of CARDS_DB){
+        CARD_BY_ID[card.id] = card;
+        if(!CARDS_BY_SET[card.set]) CARDS_BY_SET[card.set] = [];
+        CARDS_BY_SET[card.set].push(card);
+      }
+    }
 
-var priceFilter='';
-function renderPrices(){
-  var q=priceFilter;
-  var cards=CARDS_DB
-    .filter(function(c){return!q||c.name.toLowerCase().indexOf(q.toLowerCase())!==-1||c.id.toLowerCase().indexOf(q.toLowerCase())!==-1;})
-    .sort(function(a,b){return(RW[a.rarity]||9)-(RW[b.rarity]||9)||b.price-a.price;});
-  var rb={SEC:'rbs',SR:'rbsr',R:'rbr',UC:'rbc',C:'rbc',L:'rbc'};
-  var shown=cards.slice(0,200);
-  var pc=document.getElementById('priceCount');
-  if(pc)pc.textContent=cards.length+' cartes';
-  var html='';
-  shown.forEach(function(card){
-    var thumb='<div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:4px">'
-      +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
-      +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
-      +'</div>';
-    html+='<div class="pitem" onclick="openCzoom(getCard(\''+card.id+'\'))"><div class="pthmb">'+thumb+'</div>'
-      +'<div class="pinf"><div class="pname">'+card.name+'</div>'
-      +'<div class="parc">'+card.id+'</div>'
-      +'<div class="pbdg"><span class="rbdg '+(rb[card.rarity]||'rbc')+'">'+(RL[card.rarity]||card.rarity)+'</span></div></div>'
-      +'<div class="prgt"><div class="pval">'+card.price.toFixed(2)+' EUR</div>'
-      +'<div class="blinks">'
-      +'<a class="blnk cm" href="'+linkCM(card)+'" target="_blank" onclick="event.stopPropagation()">CM</a>'
-      +'<a class="blnk tcp" href="'+linkTCP(card)+'" target="_blank" onclick="event.stopPropagation()">TCP</a>'
-      +'</div></div></div>';
-  });
-  if(cards.length>200)html+='<div style="text-align:center;padding:14px;color:var(--dim);font-size:12px">200 resultats affiches - affinez la recherche</div>';
-  document.getElementById('priceList').innerHTML=html||'<div style="text-align:center;padding:30px;color:var(--muted)">Aucun resultat</div>';
-}
-function filterPrices(){priceFilter=document.getElementById('priceQ').value;renderPrices();}
-function getCard(id){return CARDS_DB.find(function(c){return c.id===id;})||{id:id,name:id,set:id.split('-')[0]||'OP01',rarity:'C',price:0,pw:0,cost:0,color:''};}
+    function getCard(id){
+      return CARD_BY_ID[id] || { id, name:id, set:String(id).split("-")[0]||"OP01", rarity:"C", price:0, pw:0, cost:0, color:"" };
+    }
 
-var colF='all';
-function renderCol(){
-  var entries=Object.keys(S.col).map(function(id){return{id:id,qty:S.col[id]};});
-  var total=entries.reduce(function(s,e){return s+e.qty;},0);
-  var value=entries.reduce(function(s,e){var c=getCard(e.id);return s+(c?c.price*e.qty:0);},0);
-  document.getElementById('cCards').textContent=total;
-  document.getElementById('cValue').textContent=value.toFixed(0)+' EUR';
-  document.getElementById('cUniq').textContent=entries.length;
-  var filtered=entries.filter(function(e){if(colF==='all')return true;var c=getCard(e.id);return c&&c.rarity===colF;});
-  var g=document.getElementById('colGrid');
-  if(!filtered.length){g.innerHTML='<div class="colempty"><div style="font-size:36px;opacity:0.3;margin-bottom:12px">&#x1F4E6;</div><p>Ouvre des boosters pour commencer !</p></div>';return;}
-  var html='';
-  filtered.forEach(function(e){
-    var card=getCard(e.id);
-    var img='<div style="position:relative;width:100%;height:100%;overflow:hidden">'
-      +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="window.imgFail&&window.imgFail(this)">'
-      +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
-      +'</div>';
-    html+='<div class="ccard" onclick="openCzoom(getCard(\''+card.id+'\'))"><div class="ccimg">'+img+'</div>'
-      +'<div class="ccft"><div class="ccn">'+card.name+'</div>'
-      +'<div class="ccr"><div class="ccp">'+card.price.toFixed(2)+' EUR</div><div class="ccq">x'+e.qty+'</div></div></div></div>';
-  });
-  g.innerHTML=html;
-}
-function setF(f,btn){colF=f;document.querySelectorAll('.fpill').forEach(function(p){p.classList.remove('active');});btn.classList.add('active');renderCol();}
+    function getSetCards(setId){
+      return CARDS_BY_SET[setId] || [];
+    }
 
-var ACHS=[
-  {icon:'&#x1F004;',name:'1er Pack',ok:function(s){return s.packs>=1;}},
-  {icon:'&#x1F31F;',name:'God Pack',ok:function(s){return s.godPacks>=1;}},
-  {icon:'&#x1F4AF;',name:'100 Packs',ok:function(s){return s.packs>=100;}},
-  {icon:'&#x1F48E;',name:'Collectionneur',ok:function(s){return Object.keys(s.col).length>=30;}},
-  {icon:'&#x1F525;',name:'Secret Rare',ok:function(s){return Object.keys(s.col).some(function(id){var c=getCard(id);return c&&c.rarity==='SEC';});}},
-  {icon:'&#x1F451;',name:'1000 Cartes',ok:function(s){return s.cards>=1000;}},
-];
-var RANKS=[[0,'Recrue'],[10,'Pirate junior'],[50,'Chasseur de cartes'],[100,'Capitaine TCG'],[500,'Grand Line Master'],[1000,'Roi des Pirates']];
-function getrank(p){var t='Recrue';RANKS.forEach(function(r){if(p>=r[0])t=r[1];});return t;}
-var LB=[
-  {rank:1,name:'Luffy_Fan99',av:'&#x1F3F4;&#x200D;&#x2620;&#xFE0F;',det:'God Pack OP05',gp:12},
-  {rank:2,name:'ZoroSensei',av:'&#x2694;&#xFE0F;',det:'God Pack OP08',gp:9},
-  {rank:3,name:'NamiSwaN',av:'&#x1F5FA;&#xFE0F;',det:'God Pack OP01',gp:7},
-  {rank:4,name:'SanjiFr',av:'&#x1F9B5;',det:'5x SEC en 1 pack',gp:5},
-  {rank:5,name:'ChopperMD',av:'&#x1F98C;',det:'3x God Pack',gp:3},
-];
-function renderProf(){
-  document.getElementById('profN').textContent=S.user;
-  document.getElementById('profR').textContent=getrank(S.packs);
-  document.getElementById('ps1').textContent=S.packs;
-  document.getElementById('ps2').textContent=S.cards;
-  document.getElementById('ps3').textContent=S.godPacks;
-  document.getElementById('nameIn').value=S.user;
-  var ach='';
-  ACHS.forEach(function(a){var ok=a.ok(S);ach+='<div class="achi'+(ok?' ok':'')+'"><div class="achic">'+a.icon+'</div><div class="achn">'+a.name+'</div></div>';});
-  document.getElementById('achGrid').innerHTML=ach;
-  var me={rank:LB.length+1,name:S.user+' (Moi)',av:'&#x2693;',det:S.packs+' packs',gp:S.godPacks,isMe:true};
-  var lb='';
-  LB.concat([me]).forEach(function(p,i){
-    var rn=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    lb+='<div class="lbitem'+(p.isMe?' me':i===0?' gold':'')+'"><div class="lbrk '+rn+'">'+p.rank+'</div>'
-      +'<div class="lbav">'+p.av+'</div>'
-      +'<div class="lbinf"><div class="lbn">'+p.name+'</div><div class="lbd">'+p.det+'</div></div>'
-      +'<div class="lbsc"><div class="lbscv">'+p.gp+'</div><div class="lbscl">God Packs</div></div></div>';
-  });
-  document.getElementById('lbList').innerHTML=lb;
-}
-function saveName(){var v=document.getElementById('nameIn').value.trim();if(v){S.user=v;updStats();renderProf();showToast('Pseudo mis a jour !');}}
+    function getSetCardsByRarity(setId, rarity){
+      return getSetCards(setId).filter(c => c.rarity === rarity);
+    }
 
-function updStats(){
-  var t=S.packs+' pack'+(S.packs!==1?'s':'');
-  document.getElementById('tstat').textContent=t;
-  var b=document.getElementById('bstat');if(b)b.textContent=t;
-  document.getElementById('h1').textContent=S.packs;
-  document.getElementById('h2').textContent=S.cards;
-  document.getElementById('h3').textContent=S.godPacks;
-}
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+    function linkCM(card){
+      const n = String(card.name||"").replace(/\./g,"").replace(/\s+/g,"").replace(/[^a-zA-Z0-9]/g,"");
+      return "https://www.cardmarket.com/en/OnePiece/Cards/" + n + "-" + card.id + "/Versions";
+    }
 
-initBooster();renderPrices();updStats();
-loadAllSets();
-</script>
+    function linkTCP(card){
+      return "https://www.tcgplayer.com/search/one-piece-card-game/product?q=" + encodeURIComponent(card.id);
+    }
+
+    function imgUrl(id){
+      const p = String(id).split("-");
+      return "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/" + p[0] + "/" + id + "_EN.webp";
+    }
+
+    function makeSVG(card){
+      const sd = SETS.find(s => s.id === card.set);
+      const col = sd ? sd.color : ["#1a1a3e","#4a90d9"];
+      const rc = RC[card.rarity] || "#888";
+      const uid = card.id.replace(/[^a-z0-9]/gi,"x");
+      const nm = card.name.length>16 ? card.name.slice(0,15)+"..." : card.name;
+
+      const shape = card.rarity==="SEC"
+        ? '<path d="M60,45 L68,67 L92,67 L73,80 L80,102 L60,89 L40,102 L47,80 L28,67 L52,67Z" fill="'+rc+'" fill-opacity="0.85"/>'
+        : card.rarity==="SR"
+        ? '<ellipse cx="60" cy="75" rx="26" ry="26" fill="'+rc+'" fill-opacity="0.1" stroke="'+rc+'" stroke-width="2"/><polygon points="60,52 69,72 60,92 51,72" fill="'+rc+'" fill-opacity="0.7"/>'
+        : card.rarity==="R"
+        ? '<rect x="37" y="52" width="46" height="46" rx="7" fill="'+rc+'" fill-opacity="0.18" stroke="'+rc+'" stroke-width="1.5" transform="rotate(15,60,75)"/>'
+        : '<circle cx="60" cy="75" r="18" fill="'+rc+'" fill-opacity="0.1" stroke="'+rc+'" stroke-width="1.5"/>';
+
+      return '<svg viewBox="0 0 120 168" xmlns="http://www.w3.org/2000/svg">'
+        +'<defs><linearGradient id="g'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+col[0]+'"/><stop offset="100%" stop-color="'+col[0]+'" stop-opacity="0.6"/></linearGradient></defs>'
+        +'<rect width="120" height="168" rx="8" fill="url(#g'+uid+')"/>'
+        +'<rect x="3" y="3" width="114" height="162" rx="6" fill="none" stroke="'+rc+'" stroke-opacity="0.5" stroke-width="1.5"/>'
+        +'<rect x="3" y="3" width="114" height="17" fill="'+rc+'" fill-opacity="0.18"/>'
+        +'<text x="8" y="14" font-size="6" font-family="monospace" fill="'+rc+'" font-weight="bold">'+safeText(card.id)+'</text>'
+        +'<text x="117" y="14" font-size="5.5" font-family="monospace" fill="'+rc+'" text-anchor="end">'+safeText(RL[card.rarity]||card.rarity)+'</text>'
+        +shape
+        +'<rect x="8" y="115" width="104" height="36" rx="4" fill="rgba(0,0,0,0.72)"/>'
+        +'<text x="60" y="126" font-size="'+(nm.length>14?7:9)+'" font-family="Georgia,serif" font-weight="bold" fill="#f0e8d8" text-anchor="middle">'+safeText(nm)+'</text>'
+        +'<text x="60" y="139" font-size="6" font-family="monospace" fill="'+rc+'" fill-opacity="0.8" text-anchor="middle">'+safeText(card.set)+'</text>'
+        +'<text x="12" y="156" font-size="7" font-family="monospace" fill="#f0e8d8">'+safeText(card.pw||"")+'</text>'
+        +'<circle cx="108" cy="153" r="8" fill="'+col[0]+'" stroke="'+rc+'" stroke-width="1.5"/>'
+        +'<circle cx="108" cy="153" r="4" fill="'+rc+'" fill-opacity="0.85"/>'
+        +'</svg>';
+    }
+
+    window.imgFail = function(el){
+      try{
+        if(!el||!el.style) return;
+        el.style.display="none";
+        const p = el.parentNode;
+        if(p){
+          const fb = p.querySelector(".svg-fb");
+          if(fb) fb.style.display="block";
+        }
+      }catch(e){}
+    };
+
+    function mkImg(card, style){
+      return '<div style="position:relative;width:100%;height:100%;overflow:hidden">'
+        +'<img src="'+imgUrl(card.id)+'" style="'+style+'" onerror="window.imgFail&&window.imgFail(this)">'
+        +'<div class="svg-fb" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%">'+makeSVG(card)+'</div>'
+        +'</div>';
+    }
+
+    function packSVG(s){
+      const c=s.color, c1=c[0], c2=c[1]||c[0], acc=c[2]||"#d4a843";
+      const nm=s.name.length>18 ? s.name.slice(0,17)+"..." : s.name;
+      return '<svg viewBox="0 0 130 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">'
+        +'<defs><linearGradient id="pk'+s.id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="'+c1+'"/><stop offset="100%" stop-color="'+c2+'"/></linearGradient>'
+        +'<linearGradient id="pks'+s.id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.18)"/><stop offset="100%" stop-color="rgba(0,0,0,0.4)"/></linearGradient></defs>'
+        +'<rect width="130" height="195" rx="10" fill="url(#pk'+s.id+')"/>'
+        +'<rect width="130" height="195" rx="10" fill="url(#pks'+s.id+')"/>'
+        +'<rect x="5" y="5" width="120" height="185" rx="7" fill="none" stroke="'+acc+'" stroke-opacity="0.75" stroke-width="2.5"/>'
+        +'<circle cx="65" cy="90" r="46" fill="none" stroke="'+acc+'" stroke-opacity="0.15" stroke-width="1.5"/>'
+        +'<path d="M65,57 L76.5,82 L103,82 L82,97.5 L90,122 L65,107 L40,122 L48,97.5 L27,82 L53.5,82Z" fill="'+acc+'" fill-opacity="0.88"/>'
+        +'<text x="65" y="138" font-family="Cinzel,Georgia,serif" font-size="13" font-weight="900" fill="'+acc+'" text-anchor="middle" letter-spacing="3">'+safeText(s.id)+'</text>'
+        +'<text x="65" y="157" font-family="Georgia,serif" font-size="7" fill="#f0e8d8" fill-opacity="0.85" text-anchor="middle">'+safeText(nm)+'</text>'
+        +'<text x="65" y="173" font-family="monospace" font-size="6" fill="'+acc+'" fill-opacity="0.4" text-anchor="middle">ONE PIECE TCG</text>'
+        +'</svg>';
+    }
+
+    function normalizeRarity(r){
+      const m = {
+        SEC:"SEC", SR:"SR", R:"R", UC:"UC", C:"C",
+        "Secret Rare":"SEC", "Super Rare":"SR", Rare:"R", Uncommon:"UC", Common:"C",
+        L:"L", Leader:"L"
+      };
+      return m[r] || "C";
+    }
+
+    function updateProgress(loadedSets){
+      const st = document.getElementById("homeStatus");
+      if(st){
+        st.innerHTML = '<span style="color:var(--gold)">'+loadedSets+'/'+SETS.length+' sets</span> <span style="color:var(--dim)">('+CARDS_DB.length+' cartes)</span>';
+      }
+    }
+
+    function addLocalSet(sid){
+      const sizes = {OP01:121,OP02:117,OP03:123,OP04:119,OP05:119,OP06:119,OP07:119,OP08:119,OP09:120,OP10:119,OP11:119,OP12:119,OP13:120,OP14:120,OP15:118};
+      const secMap = {
+        OP01:[120,121],OP02:[13,99],OP03:[121,123],OP04:[83,119],OP05:[118,119],
+        OP06:[118,119],OP07:[118,119],OP08:[118,119],OP09:[118,119,120],OP10:[118,119],
+        OP11:[118,119],OP12:[118,119],OP13:[118,119,120],OP14:[119,120],OP15:[118,119]
+      };
+      const total = sizes[sid] || 118;
+      const secs = secMap[sid] || [];
+
+      for(let i=1;i<=total;i++){
+        const num = String(i).padStart(3,"0");
+        const id = sid + "-" + num;
+        if(CARD_BY_ID[id]) continue;
+
+        let r = "C";
+        if(secs.includes(i)) r = "SEC";
+        else if(i<=5) r = "L";
+        else if(i<=25) r = "SR";
+        else if(i<=55) r = "R";
+        else if(i<=85) r = "UC";
+
+        CARDS_DB.push({ id, name:id, set:sid, rarity:r, price:PRICE_EST[r]||.2, pw:0, cost:0, color:"" });
+      }
+    }
+
+    async function loadAllSets(){
+      const st = document.getElementById("homeStatus");
+      if(st) st.innerHTML = "Chargement des cartes OP01 à OP15...";
+
+      CARDS_DB = [];
+      rebuildIndexes();
+
+      const apiSets = ["OP01","OP02","OP03","OP04","OP05","OP06","OP07","OP08","OP09","OP10","OP11","OP12"];
+      let loaded = 0;
+
+      for(const sid of apiSets){
+        let ok = false;
+        try{
+          const res = await fetch("https://optcgapi.com/api/sets/" + sid + "/");
+          const data = await res.json();
+          const list = Array.isArray(data) ? data : (data.cards || data.results || []);
+          if(Array.isArray(list) && list.length){
+            for(const c of list){
+              const r = normalizeRarity(c.rarity || c.card_rarity || "C");
+              const price = parseFloat(c.market_price || c.price || PRICE_EST[r] || .5);
+              CARDS_DB.push({
+                id:c.card_id || c.id || (sid+"-000"),
+                name:c.name || c.card_name || sid,
+                set:sid,
+                rarity:r,
+                price:Number.isNaN(price) ? (PRICE_EST[r] || .5) : price,
+                pw:parseInt(c.power || 0, 10),
+                cost:parseInt(c.cost || 0, 10),
+                color:c.color || ""
+              });
+            }
+            ok = true;
+          }
+        }catch(e){}
+
+        rebuildIndexes();
+        if(!ok){
+          addLocalSet(sid);
+          rebuildIndexes();
+        }
+        loaded++;
+        updateProgress(loaded);
+        initBooster();
+      }
+
+      for(const sid of ["OP13","OP14","OP15"]){
+        addLocalSet(sid);
+        rebuildIndexes();
+        loaded++;
+        updateProgress(loaded);
+        initBooster();
+      }
+
+      if(st){
+        st.innerHTML = '<span style="color:var(--green)">✓ '+CARDS_DB.length+' cartes chargées OP01 à OP15</span>';
+      }
+
+      initBooster();
+      renderPrices();
+      renderCol();
+      renderProf();
+      updStats();
+      showToast(CARDS_DB.length + " cartes chargées !");
+    }
+
+    function rollR(){
+      const r = Math.random();
+      if(r < .083) return "SEC";
+      if(r < .28) return "SR";
+      if(r < .55) return "R";
+      if(r < .80) return "UC";
+      return "C";
+    }
+
+    function pullCard(sid, forceR){
+      let pool = getSetCardsByRarity(sid, forceR || rollR());
+      if(!pool.length) pool = getSetCardsByRarity(sid,"C");
+      if(!pool.length) pool = getSetCards(sid);
+      if(!pool.length) pool = CARDS_DB.slice(0,5);
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function openPack(sid){
+      const isGod = Math.random() < (1/360);
+      const cards = [];
+      if(isGod){
+        S.godPacks++;
+        for(let i=0;i<12;i++) cards.push(pullCard(sid,"SEC"));
+        return { cards, isGod:true };
+      }
+      const r0 = Math.random();
+      cards.push(r0<.083 ? pullCard(sid,"SEC") : r0<.33 ? pullCard(sid,"SR") : pullCard(sid,"R"));
+      for(let j=1;j<12;j++) cards.push(pullCard(sid));
+      return { cards, isGod:false };
+    }
+
+    function doOpen(n){
+      if(!getSetCards(S.set).length){
+        showToast("Cartes en cours de chargement...");
+        return;
+      }
+
+      S.last = n;
+      let all = [];
+      let anyGod = false;
+
+      for(let p=0;p<n;p++){
+        const res = openPack(S.set);
+        all = all.concat(res.cards);
+        if(res.isGod) anyGod = true;
+      }
+
+      S.packs += n;
+      S.cards += all.length;
+      curCards = all;
+      saveState();
+      updStats();
+
+      if(anyGod){
+        document.getElementById("godRays").classList.add("show");
+        setTimeout(() => document.getElementById("godRays").classList.remove("show"), 6000);
+      }
+
+      document.getElementById("rtt").textContent = anyGod ? "GOD PACK !!!" : (n>1 ? n+" boosters ouverts !" : "Booster ouvert !");
+      const grid = document.getElementById("flipGrid");
+      grid.style.gridTemplateColumns = "repeat(" + (all.length<=12 ? 3 : 4) + ",1fr)";
+
+      let html = "";
+      for(let i=0;i<all.length;i++){
+        const card = all[i];
+        const glow = card.rarity==="SEC" ? "gs" : card.rarity==="SR" ? "gsr" : card.rarity==="R" ? "gr" : "";
+        const front = mkImg(card, "width:100%;height:100%;object-fit:cover;border-radius:8px;display:block");
+        const sn = card.name.length>12 ? safeText(card.name.slice(0,11)+"...") : safeText(card.name);
+
+        html += '<div class="fcard" onclick="tapCard('+i+')">'
+          +'<div class="finn" id="fc'+i+'">'
+          +'<div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
+          +'<div class="ffront '+glow+'">'+front+'</div>'
+          +'</div>'
+          +'<div class="flbl"><div class="flname">'+sn+'</div><div class="flr '+safeText(card.rarity)+'">'+safeText(RL[card.rarity]||card.rarity)+'</div></div>'
+          +'</div>';
+      }
+      grid.innerHTML = html;
+
+      for(let k=0;k<all.length;k++){
+        if(all[k].rarity==="SEC" || all[k].rarity==="SR"){
+          ((idx)=>setTimeout(()=>flipC(idx), 300 + idx*80))(k);
+        }
+      }
+
+      document.getElementById("revOv").classList.add("active");
+    }
+
+    function tapCard(i){
+      const el = document.getElementById("fc"+i);
+      if(!el.classList.contains("flipped")) el.classList.add("flipped");
+      else openCzoom(curCards[i]);
+    }
+
+    function flipC(i){
+      const el = document.getElementById("fc"+i);
+      if(el && !el.classList.contains("flipped")) el.classList.add("flipped");
+    }
+
+    function closeRev(){
+      document.getElementById("revOv").classList.remove("active");
+    }
+
+    function addAll(){
+      curCards.forEach(c => S.col[c.id] = (S.col[c.id] || 0) + 1);
+      saveState();
+      updStats();
+      renderCol();
+      renderProf();
+      showToast(curCards.length + " cartes ajoutées !");
+      closeRev();
+    }
+
+    function openAgain(){
+      closeRev();
+      setTimeout(() => doOpen(S.last), 150);
+    }
+
+    function openCzoom(card){
+      if(!card) return;
+      const imgHtml = '<div style="position:relative;width:100%;overflow:hidden;border-radius:16px">'
+        +'<img src="'+imgUrl(card.id)+'" style="width:100%;border-radius:16px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+        +'<div class="svg-fb" style="display:none;width:100%">'+makeSVG(card)+'</div>'
+        +'</div>';
+      document.getElementById("cz-img").innerHTML = imgHtml;
+      document.getElementById("cz-id").textContent = card.id;
+      document.getElementById("cz-name").textContent = card.name;
+      document.getElementById("cz-sub").textContent = (RL[card.rarity]||card.rarity)+" - "+card.set+(card.color ? " - "+card.color : "");
+      document.getElementById("cz-price").textContent = card.price.toFixed(2) + " EUR";
+      document.getElementById("cz-cm").href = linkCM(card);
+      document.getElementById("cz-tcp").href = linkTCP(card);
+      document.getElementById("czoom").classList.add("open");
+    }
+
+    function closeCzoom(){
+      document.getElementById("czoom").classList.remove("open");
+    }
+
+    function goPage(name, btn){
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".bi").forEach(b => b.classList.remove("active"));
+      const page = document.getElementById(name + "-page");
+      if(page) page.classList.add("active");
+      if(btn) btn.classList.add("active");
+      window.scrollTo(0,0);
+
+      if(name==="booster") initBooster();
+      if(name==="prices") renderPrices();
+      if(name==="collection") renderCol();
+      if(name==="profile") renderProf();
+
+      updStats();
+    }
+
+    function initBooster(){
+      const wrap = document.getElementById("setsScroll");
+      if(!wrap) return;
+      let html = "";
+      SETS.forEach(s => {
+        const count = getSetCards(s.id).length;
+        html += '<div class="schip'+(s.id===S.set ? ' active' : '')+'" onclick="selSet(\''+s.id+'\',this)">'
+          +(s.isNew ? '<div class="scnew">NEW</div>' : '')
+          +'<div class="scnum">'+safeText(s.id)+'</div>'
+          +'<div class="scname">'+safeText(s.name)+'</div>'
+          +'<div class="scbadge">'+(count>0 ? count+' cartes' : '...')+'</div>'
+          +'</div>';
+      });
+      wrap.innerHTML = html;
+      updPack();
+    }
+
+    function selSet(id, el){
+      S.set = id;
+      saveState();
+      document.querySelectorAll(".schip").forEach(c => c.classList.remove("active"));
+      if(el) el.classList.add("active");
+      updPack();
+    }
+
+    function updPack(){
+      const s = SETS.find(x => x.id===S.set) || SETS[0];
+      const count = getSetCards(S.set).length;
+      document.getElementById("pnl").textContent = s.id;
+      document.getElementById("pnn").textContent = s.name;
+      document.getElementById("pnm").textContent = count>0 ? count+" cartes dans ce set" : "Chargement...";
+      document.getElementById("packVis").innerHTML = packSVG(s);
+    }
+
+    function renderPrices(){
+      const q = priceFilter.trim().toLowerCase();
+      const cards = CARDS_DB
+        .filter(c => !q || c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q))
+        .sort((a,b) => (RW[a.rarity]||9)-(RW[b.rarity]||9) || b.price-a.price);
+
+      const rb = { SEC:"rbs", SR:"rbsr", R:"rbr", UC:"rbc", C:"rbc", L:"rbc" };
+      const shown = cards.slice(0,200);
+      const pc = document.getElementById("priceCount");
+      if(pc) pc.textContent = cards.length + (cards.length>1 ? " cartes" : " carte");
+
+      let html = "";
+      shown.forEach(card => {
+        const thumb = '<div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:4px">'
+          +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+          +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
+          +'</div>';
+
+        html += '<div class="pitem" onclick="openCzoom(getCard(\''+safeText(card.id)+'\'))">'
+          +'<div class="pthmb">'+thumb+'</div>'
+          +'<div class="pinf">'
+          +'<div class="pname">'+safeText(card.name)+'</div>'
+          +'<div class="parc">'+safeText(card.id)+'</div>'
+          +'<div class="pbdg"><span class="rbdg '+(rb[card.rarity]||'rbc')+'">'+safeText(RL[card.rarity]||card.rarity)+'</span></div>'
+          +'</div>'
+          +'<div class="prgt">'
+          +'<div class="pval">'+card.price.toFixed(2)+' EUR</div>'
+          +'<div class="blinks">'
+          +'<a class="blnk cm" href="'+linkCM(card)+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">CM</a>'
+          +'<a class="blnk tcp" href="'+linkTCP(card)+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">TCP</a>'
+          +'</div></div></div>';
+      });
+
+      if(cards.length > 200){
+        html += '<div style="text-align:center;padding:14px;color:var(--dim);font-size:12px">200 résultats affichés - affine la recherche</div>';
+      }
+
+      document.getElementById("priceList").innerHTML = html || '<div style="text-align:center;padding:30px;color:var(--muted)">Aucun résultat</div>';
+    }
+
+    function filterPrices(){
+      priceFilter = document.getElementById("priceQ").value;
+      renderPrices();
+    }
+
+    function renderCol(){
+      const entries = Object.keys(S.col).map(id => ({id, qty:S.col[id]}));
+      const total = entries.reduce((sum,e) => sum + e.qty, 0);
+      const value = entries.reduce((sum,e) => sum + getCard(e.id).price * e.qty, 0);
+
+      document.getElementById("cCards").textContent = total;
+      document.getElementById("cValue").textContent = value.toFixed(0) + " EUR";
+      document.getElementById("cUniq").textContent = entries.length;
+
+      const filtered = entries.filter(e => colF==="all" ? true : getCard(e.id).rarity===colF);
+      const g = document.getElementById("colGrid");
+
+      if(!filtered.length){
+        g.innerHTML = '<div class="colempty"><div style="font-size:36px;opacity:.3;margin-bottom:12px">📦</div><p>Ouvre des boosters pour commencer !</p></div>';
+        return;
+      }
+
+      let html = "";
+      filtered.forEach(e => {
+        const card = getCard(e.id);
+        const img = '<div style="position:relative;width:100%;height:100%;overflow:hidden">'
+          +'<img src="'+imgUrl(card.id)+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="window.imgFail&&window.imgFail(this)">'
+          +'<div class="svg-fb" style="display:none;width:100%;height:100%">'+makeSVG(card)+'</div>'
+          +'</div>';
+
+        html += '<div class="ccard" onclick="openCzoom(getCard(\''+safeText(card.id)+'\'))">'
+          +'<div class="ccimg">'+img+'</div>'
+          +'<div class="ccft"><div class="ccn">'+safeText(card.name)+'</div>'
+          +'<div class="ccr"><div class="ccp">'+card.price.toFixed(2)+' EUR</div><div class="ccq">x'+e.qty+'</div></div></div></div>';
+      });
+
+      g.innerHTML = html;
+    }
+
+    function setF(f, btn){
+      colF = f;
+      document.querySelectorAll(".fpill").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      renderCol();
+    }
+
+    function getrank(p){
+      let t = "Recrue";
+      RANKS.forEach(r => { if(p >= r[0]) t = r[1]; });
+      return t;
+    }
+
+    function renderProf(){
+      document.getElementById("profN").textContent = S.user;
+      document.getElementById("profR").textContent = getrank(S.packs);
+      document.getElementById("ps1").textContent = S.packs;
+      document.getElementById("ps2").textContent = S.cards;
+      document.getElementById("ps3").textContent = S.godPacks;
+      document.getElementById("nameIn").value = S.user;
+
+      let ach = "";
+      ACHS.forEach(a => {
+        const ok = a.ok(S);
+        ach += '<div class="achi'+(ok?' ok':'')+'"><div class="achic">'+a.icon+'</div><div class="achn">'+safeText(a.name)+'</div></div>';
+      });
+      document.getElementById("achGrid").innerHTML = ach;
+
+      const me = { rank:LB.length+1, name:S.user+" (Moi)", av:"⚓", det:S.packs+" packs", gp:S.godPacks, isMe:true };
+
+      let lb = "";
+      LB.concat([me]).forEach((p,i) => {
+        const rn = i===0 ? "r1" : i===1 ? "r2" : i===2 ? "r3" : "";
+        lb += '<div class="lbitem'+(p.isMe?' me':i===0?' gold':'')+'">'
+          +'<div class="lbrk '+rn+'">'+safeText(p.rank)+'</div>'
+          +'<div class="lbav">'+p.av+'</div>'
+          +'<div class="lbinf"><div class="lbn">'+safeText(p.name)+'</div><div class="lbd">'+safeText(p.det)+'</div></div>'
+          +'<div class="lbsc"><div class="lbscv">'+safeText(p.gp)+'</div><div class="lbscl">God Packs</div></div>'
+          +'</div>';
+      });
+
+      document.getElementById("lbList").innerHTML = lb;
+    }
+
+    function saveName(){
+      const v = document.getElementById("nameIn").value.trim();
+      if(v){
+        S.user = v;
+        saveState();
+        updStats();
+        renderProf();
+        showToast("Pseudo mis à jour !");
+      }
+    }
+
+    function updStats(){
+      const t = S.packs + " pack" + (S.packs!==1 ? "s" : "");
+      const tstat = document.getElementById("tstat");
+      const bstat = document.getElementById("bstat");
+      if(tstat) tstat.textContent = t;
+      if(bstat) bstat.textContent = t;
+
+      const h1=document.getElementById("h1"), h2=document.getElementById("h2"), h3=document.getElementById("h3");
+      if(h1) h1.textContent = S.packs;
+      if(h2) h2.textContent = S.cards;
+      if(h3) h3.textContent = S.godPacks;
+    }
+
+    function showToast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    loadState();
+    rebuildIndexes();
+    initBooster();
+    renderPrices();
+    renderCol();
+    renderProf();
+    updStats();
+    loadAllSets();
+  </script>
 </body>
 </html>
