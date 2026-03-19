@@ -72,12 +72,12 @@
     .abtn{display:block;text-align:center;text-decoration:none;padding:11px 8px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer}
     .abtn.cm{background:#27ae60;color:white}
     .abtn.tcp{background:#e74c3c;color:white}
-    .roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow:hidden;}
+    .roverlay{position:fixed;inset:0;z-index:2000;background:#000;display:none;flex-direction:column;overflow-y:auto;}
     .roverlay.active{display:flex;}
     .rtop{padding:14px 18px 10px;text-align:center;flex-shrink:0;border-bottom:1px solid var(--border)}
     .rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
     .rts{font-size:11px;color:var(--dim)}
-    .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1;overflow-y:auto;min-height:0;padding-bottom:220px;}
+    .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1;padding-bottom:120px;}
     .fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer}
     .finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
     .finn.flipped{transform:rotateY(180deg)}
@@ -93,10 +93,12 @@
     .flname{font-weight:500;color:var(--text);font-size:9px}
     .flr{font-size:8px}
     .flr.SEC{color:var(--gold)} .flr.SR{color:var(--red)} .flr.R{color:var(--blue)} .flr.UC,.flr.C,.flr.L{color:var(--muted)}
-    .ract{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;padding-bottom:calc(22px + env(safe-area-inset-bottom, 0px));border-top:1px solid var(--border);background:#000;position:fixed;left:0;right:0;bottom:0;z-index:50;}
+    .ract{position:sticky;bottom:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom));background:#000;z-index:3000;border-top:1px solid var(--border);}
     .radd{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06040a;border:none;padding:12px;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer;grid-column:1/-1}
     .rclose{background:var(--s2);color:var(--dim);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:12px;cursor:pointer}
     .ragain{background:var(--s2);color:var(--gold);border:1px solid rgba(212,168,67,.3);padding:10px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
+    .card{transition: transform 0.2s ease, box-shadow 0.2s ease;}
+    .card:active{transform: scale(1.05);box-shadow: 0 0 20px rgba(255,215,0,0.6);}
     .czoom{position:fixed;inset:0;z-index:3500;background:rgba(0,0,0,.96);display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:16px 20px 30px}
     .czoom.open{display:flex}
     .czoom-head{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;max-width:360px}
@@ -116,6 +118,9 @@
     @keyframes godRay{from{transform:rotate(0)}to{transform:rotate(360deg)}}
     .grays{position:fixed;inset:0;pointer-events:none;z-index:1999;background:repeating-conic-gradient(rgba(212,168,67,.12) 0deg,transparent 12deg,rgba(212,168,67,.12) 24deg);animation:godRay 10s linear infinite;display:none}
     .grays.show{display:block}
+    .super-rare{box-shadow:0 0 15px red;}
+    .secret-rare{box-shadow:0 0 20px gold;}
+    .common{opacity:0.9;}
     .sbar{margin:0 18px 12px;position:relative}
     .sinp{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 42px 12px 16px;color:var(--text);font-size:14px;outline:none}
     .sinp:focus{border-color:var(--gold)}
@@ -202,6 +207,7 @@
     <button class="bi" onclick="goPage('prices',this)"><div class="bi-ico">💰</div><div class="bi-lbl">Prix</div></button>
     <button class="bi" onclick="goPage('collection',this)"><div class="bi-ico">📦</div><div class="bi-lbl">Collection</div></button>
     <button class="bi" onclick="goPage('profile',this)"><div class="bi-ico">⚓</div><div class="bi-lbl">Profil</div></button>
+    <button onclick="openPack(5)">⚡ Ouvrir x5</button>
   </nav>
 
   <div class="grays" id="godRays"></div>
@@ -533,6 +539,8 @@
         +'<text x="65" y="173" font-family="monospace" font-size="6" fill="'+acc+'" fill-opacity="0.4" text-anchor="middle">ONE PIECE TCG</text>'
         +'</svg>';
     }
+    
+    body{-webkit-tap-highlight-color: transparent;}
 
     function normalizeRarity(r){
       const m = {
