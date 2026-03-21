@@ -78,7 +78,7 @@
     .rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
     .rts{font-size:11px;color:var(--dim)}
     .fgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;flex:1;padding-bottom:120px;}
-    .fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer}
+    .fcard{animation: cardPop .35s ease;}@keyframes cardPop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
     .finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
     .finn.flipped{transform:rotateY(180deg)}
     .ffront,.fback{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;overflow:hidden}
@@ -681,61 +681,82 @@
     }
 
     function doOpen(n){
-      if(!getSetCards(S.set).length){
-        showToast("Cartes en cours de chargement...");
-        return;
-      }
+  if(!getSetCards(S.set).length){
+    showToast("Cartes en cours de chargement...");
+    return;
+  }
 
-      S.last = n;
-      let all = [];
-      let anyGod = false;
+  const packEl = document.getElementById("packVis");
+  const flashEl = document.getElementById("packFlash");
 
-      for(let p=0;p<n;p++){
-        const res = openPack(S.set);
-        all = all.concat(res.cards);
-        if(res.isGod) anyGod = true;
-      }
+  if(packEl.classList.contains("opening")) return;
 
-      S.packs += n;
-      S.cards += all.length;
-      curCards = all;
-      saveState();
-      updStats();
+  packEl.classList.add("opening");
+  if(flashEl) flashEl.classList.add("show");
 
-      if(anyGod){
-        document.getElementById("godRays").classList.add("show");
-        setTimeout(() => document.getElementById("godRays").classList.remove("show"), 6000);
-      }
+  setTimeout(() => {
+    S.last = n;
+    let all = [];
+    let anyGod = false;
 
-      document.getElementById("rtt").textContent = anyGod ? "GOD PACK !!!" : (n>1 ? n+" boosters ouverts !" : "Booster ouvert !");
-      const grid = document.getElementById("flipGrid");
-      grid.style.gridTemplateColumns = "repeat(" + (all.length<=12 ? 3 : 4) + ",1fr)";
-
-      let html = "";
-      for(let i=0;i<all.length;i++){
-        const card = all[i];
-        const glow = card.rarity==="SEC" ? "gs" : card.rarity==="SR" ? "gsr" : card.rarity==="R" ? "gr" : "";
-        const front = mkImg(card, "width:100%;height:100%;object-fit:cover;border-radius:8px;display:block");
-        const sn = card.name.length>12 ? safeText(card.name.slice(0,11)+"...") : safeText(card.name);
-
-        html += '<div class="fcard" onclick="tapCard('+i+')">'
-          +'<div class="finn" id="fc'+i+'">'
-          +'<div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
-          +'<div class="ffront '+glow+'">'+front+'</div>'
-          +'</div>'
-          +'<div class="flbl"><div class="flname">'+sn+'</div><div class="flr '+safeText(card.rarity)+'">'+safeText(RL[card.rarity]||card.rarity)+'</div></div>'
-          +'</div>';
-      }
-      grid.innerHTML = html;
-
-      for(let k=0;k<all.length;k++){
-        if(all[k].rarity==="SEC" || all[k].rarity==="SR"){
-          ((idx)=>setTimeout(()=>flipC(idx), 300 + idx*80))(k);
-        }
-      }
-
-      document.getElementById("revOv").classList.add("active");
+    for(let p=0;p<n;p++){
+      const res = openPack(S.set);
+      all = all.concat(res.cards);
+      if(res.isGod) anyGod = true;
     }
+
+    S.packs += n;
+    S.cards += all.length;
+    curCards = all;
+    saveState();
+    updStats();
+
+    if(anyGod){
+      document.getElementById("godRays").classList.add("show");
+      setTimeout(() => {
+        document.getElementById("godRays").classList.remove("show");
+      }, 6000);
+    }
+
+    document.getElementById("rtt").textContent =
+      anyGod ? "GOD PACK !!!" : (n > 1 ? n + " boosters ouverts !" : "Booster ouvert !");
+
+    const grid = document.getElementById("flipGrid");
+    grid.style.gridTemplateColumns = "repeat(" + (all.length <= 12 ? 3 : 4) + ",1fr)";
+
+    let html = "";
+
+    for(let i=0;i<all.length;i++){
+      const card = all[i];
+      const glow = card.rarity==="SEC" ? "gs" : card.rarity==="SR" ? "gsr" : card.rarity==="R" ? "gr" : "";
+      const front = mkImg(card,"width:100%;height:100%;object-fit:cover;border-radius:8px;display:block");
+      const sn = card.name.length>12 ? safeText(card.name.slice(0,11)+"...") : safeText(card.name);
+
+      html += '<div class="fcard" onclick="tapCard('+i+')">'
+        + '<div class="finn" id="fc'+i+'">'
+        + '<div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
+        + '<div class="ffront '+glow+'">'+front+'</div>'
+        + '</div>'
+        + '<div class="flbl"><div class="flname">'+sn+'</div><div class="flr '+safeText(card.rarity)+'">'+safeText(RL[card.rarity]||card.rarity)+'</div></div>'
+        + '</div>';
+    }
+
+    grid.innerHTML = html;
+    document.getElementById("revOv").classList.add("active");
+
+    for(let k=0;k<all.length;k++){
+      setTimeout(() => {
+        flipC(k);
+      }, 220 + k * 70);
+    }
+
+    setTimeout(() => {
+      packEl.classList.remove("opening");
+      if(flashEl) flashEl.classList.remove("show");
+    }, 950);
+
+  }, 700);
+}
 
     function tapCard(i){
       const el = document.getElementById("fc"+i);
