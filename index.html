@@ -207,7 +207,6 @@
     <button class="bi" onclick="goPage('prices',this)"><div class="bi-ico">💰</div><div class="bi-lbl">Prix</div></button>
     <button class="bi" onclick="goPage('collection',this)"><div class="bi-ico">📦</div><div class="bi-lbl">Collection</div></button>
     <button class="bi" onclick="goPage('profile',this)"><div class="bi-ico">⚓</div><div class="bi-lbl">Profil</div></button>
-    <button onclick="openPack(5)">⚡ Ouvrir x5</button>
   </nav>
 
   <div class="grays" id="godRays"></div>
@@ -540,7 +539,6 @@
         +'</svg>';
     }
     
-    body{-webkit-tap-highlight-color: transparent;}
 
     function normalizeRarity(r){
       const m = {
@@ -686,76 +684,61 @@
     return;
   }
 
-  const packEl = document.getElementById("packVis");
-  const flashEl = document.getElementById("packFlash");
+  S.last = n;
+  let all = [];
+  let anyGod = false;
 
-  if(packEl.classList.contains("opening")) return;
+  for(let p=0;p<n;p++){
+    const res = openPack(S.set);
+    all = all.concat(res.cards);
+    if(res.isGod) anyGod = true;
+  }
 
-  packEl.classList.add("opening");
-  if(flashEl) flashEl.classList.add("show");
+  S.packs += n;
+  S.cards += all.length;
+  curCards = all;
+  saveState();
+  updStats();
 
-  setTimeout(() => {
-    S.last = n;
-    let all = [];
-    let anyGod = false;
-
-    for(let p=0;p<n;p++){
-      const res = openPack(S.set);
-      all = all.concat(res.cards);
-      if(res.isGod) anyGod = true;
-    }
-
-    S.packs += n;
-    S.cards += all.length;
-    curCards = all;
-    saveState();
-    updStats();
-
-    if(anyGod){
-      document.getElementById("godRays").classList.add("show");
-      setTimeout(() => {
-        document.getElementById("godRays").classList.remove("show");
-      }, 6000);
-    }
-
-    document.getElementById("rtt").textContent =
-      anyGod ? "GOD PACK !!!" : (n > 1 ? n + " boosters ouverts !" : "Booster ouvert !");
-
-    const grid = document.getElementById("flipGrid");
-    grid.style.gridTemplateColumns = "repeat(" + (all.length <= 12 ? 3 : 4) + ",1fr)";
-
-    let html = "";
-
-    for(let i=0;i<all.length;i++){
-      const card = all[i];
-      const glow = card.rarity==="SEC" ? "gs" : card.rarity==="SR" ? "gsr" : card.rarity==="R" ? "gr" : "";
-      const front = mkImg(card,"width:100%;height:100%;object-fit:cover;border-radius:8px;display:block");
-      const sn = card.name.length>12 ? safeText(card.name.slice(0,11)+"...") : safeText(card.name);
-
-      html += '<div class="fcard" onclick="tapCard('+i+')">'
-        + '<div class="finn" id="fc'+i+'">'
-        + '<div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
-        + '<div class="ffront '+glow+'">'+front+'</div>'
-        + '</div>'
-        + '<div class="flbl"><div class="flname">'+sn+'</div><div class="flr '+safeText(card.rarity)+'">'+safeText(RL[card.rarity]||card.rarity)+'</div></div>'
-        + '</div>';
-    }
-
-    grid.innerHTML = html;
-    document.getElementById("revOv").classList.add("active");
-
-    for(let k=0;k<all.length;k++){
-      setTimeout(() => {
-        flipC(k);
-      }, 220 + k * 70);
-    }
-
+  if(anyGod){
+    document.getElementById("godRays").classList.add("show");
     setTimeout(() => {
-      packEl.classList.remove("opening");
-      if(flashEl) flashEl.classList.remove("show");
-    }, 950);
+      document.getElementById("godRays").classList.remove("show");
+    }, 6000);
+  }
 
-  }, 700);
+  document.getElementById("rtt").textContent =
+    anyGod ? "GOD PACK !!!" : (n > 1 ? n + " boosters ouverts !" : "Booster ouvert !");
+
+  const grid = document.getElementById("flipGrid");
+  grid.style.gridTemplateColumns = "repeat(" + (all.length <= 12 ? 3 : 4) + ",1fr)";
+
+  let html = "";
+
+  for(let i=0;i<all.length;i++){
+    const card = all[i];
+    const glow = card.rarity==="SEC" ? "gs" : card.rarity==="SR" ? "gsr" : card.rarity==="R" ? "gr" : "";
+    const front = mkImg(card,"width:100%;height:100%;object-fit:cover;border-radius:8px;display:block");
+    const sn = card.name.length>12 ? safeText(card.name.slice(0,11)+"...") : safeText(card.name);
+
+    html += '<div class="fcard" onclick="tapCard('+i+')">'
+      + '<div class="finn" id="fc'+i+'">'
+      + '<div class="fback"><div class="fblogo">ONE PIECE<br>TCG</div></div>'
+      + '<div class="ffront '+glow+'">'+front+'</div>'
+      + '</div>'
+      + '<div class="flbl"><div class="flname">'+sn+'</div><div class="flr '+safeText(card.rarity)+'">'+safeText(RL[card.rarity]||card.rarity)+'</div></div>'
+      + '</div>';
+  }
+
+  grid.innerHTML = html;
+
+  for(let k=0;k<all.length;k++){
+    setTimeout(() => {
+      flipC(k);
+    }, 220 + k * 70);
+  }
+
+  document.getElementById("revOv").classList.add("active");
 }
 
     function tapCard(i){
