@@ -78,7 +78,7 @@
     .rtt{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:3px}
     .rts{font-size:11px;color:var(--dim)}
     .fgrd{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px;flex:1;padding-bottom:140px;}
-    .fcard{animation: cardPop .35s ease;}@keyframes cardPop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+    .fcard{position:relative;aspect-ratio:63/88;perspective:800px;cursor:pointer;animation:cardPop .35s ease;}@keyframes cardPop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
     .finn{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
     .finn.flipped{transform:rotateY(180deg)}
     .ffront,.fback{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;overflow:hidden}
